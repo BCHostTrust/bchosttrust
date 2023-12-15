@@ -1,6 +1,14 @@
 [project]
 name = "bchosttrust"
-version = "0.0.1"
+description = "Blockchain solution to domain name trustworthy"
+readme = "README.md"
+dynamic = ["version"]
 dependencies = [
     "plyvel"
+]
+authors = [
+    {name = "Marco Pui", email = "marcopui5507@gmail.com"},
+    {name = "Cato Yiu", email = "root@1f616emo.xyz"},
+    {name = "Lewis Chen", email = "bestnoodles101@gmail.com"},
+    {email = "bchosttrust@1f616emo.xyz"}
 ]
