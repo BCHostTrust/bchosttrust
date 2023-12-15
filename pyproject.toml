@@ -1,0 +1,6 @@
+[project]
+name = "bchosttrust"
+version = "0.0.1"
+dependencies = [
+    "plyvel"
+]
