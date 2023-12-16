@@ -48,14 +48,6 @@ class BCHTEntry:
             raise ValueError(
                 "Length of domain name must not exceed 4294967295.")
 
-    def __repr__(self) -> str:
-        return "BCHTEntry(domain_name={}, attitude={})".format(self.domain_name, self.attitude)
-
-    def __eq__(self, b: typing.Self) -> bool:
-        if type(self) != type(b):
-            return False
-        return self.attitude == b.attitude and self.domain_name == b.domain_name
-
     @classmethod
     def from_raw(cls, raw_bytes: bytes) -> typing.Self:
         """Generate a BCHT Entry object from its bytes form.
