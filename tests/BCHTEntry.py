@@ -1,8 +1,9 @@
 # bchosttrust/tests/BCHTEntry.py
-# Test nchosttrust.internal.BCHTEntry
+# Test bchosttrust.BCHTEntry
+# canonical: bchosttrust.internal.block.BCHTEntry
 
 import unittest
-from bchosttrust.internal import BCHTEntry
+from bchosttrust import BCHTEntry
 
 
 class BCHTEntryTestCase(unittest.TestCase):
@@ -17,7 +18,7 @@ class BCHTEntryTestCase(unittest.TestCase):
 
     def testRaw(self):
         entry = BCHTEntry("www.example.net", 2)
-        raw = entry.raw()
+        raw = entry.raw
 
         self.assertEqual(raw, b'\x02\x00\x00\x00\x0fwww.example.net')
 

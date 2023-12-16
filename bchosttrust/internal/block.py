@@ -1,7 +1,10 @@
 import struct
 import typing
+from dataclasses import dataclass
+from hashlib import sha3_512
 
 
+@dataclass(frozen=True)
 class BCHTEntry:
     """A BCHT Entry to be embedded into a BCHTBlock.
 
@@ -30,20 +33,20 @@ class BCHTEntry:
     MAX_DOMAIN_LENGTH = 4294967295  # Length within unsigned integer 32 bit
     MAX_ATTITUDE = 255  # unsigned integer 8 bit
 
-    def __init__(self, domain_name: str, attitude: int):
-        if not 0 <= attitude <= self.MAX_ATTITUDE:
+    domain_name: str
+    attitude: int
+
+    def __post_init__(self):
+        if not 0 <= self.attitude <= self.MAX_ATTITUDE:
             raise ValueError("Attitude must be within the range of 0 to 255.")
         try:
-            domain_name_bytes = domain_name.encode("ascii")
+            domain_name_bytes = self.domain_name.encode("ascii")
         except UnicodeEncodeError as e:
             raise ValueError(
                 "Domain name must only contain ASCII charactor. If non-ASCII charactors exists, escape them with IDNA encoding first.")
         if len(domain_name_bytes) > self.MAX_DOMAIN_LENGTH:
             raise ValueError(
                 "Length of domain name must not exceed 4294967295.")
-
-        self.attitude = attitude
-        self.domain_name = domain_name
 
     def __repr__(self) -> str:
         return "BCHTEntry(domain_name={}, attitude={})".format(self.domain_name, self.attitude)
@@ -88,6 +91,28 @@ class BCHTEntry:
 
         return cls(domain_name, attitude)
 
+    @classmethod
+    def from_raw_chain(cls, raw_bytes_chain: bytes) -> tuple[typing.Self]:
+        try:
+            len_entries = len(raw_bytes_chain)
+            pt = 0
+            rtns = []
+
+            while pt < len_entries:
+                raw_bytes = raw_bytes_chain[pt:pt+5]
+
+                len_domain = int.from_bytes(raw_bytes[1:5])
+                domain_name_bytes = raw_bytes_chain[pt+5:pt+5+len_domain]
+                raw_bytes += domain_name_bytes
+
+                rtns.append(BCHTEntry.from_raw(raw_bytes))
+                pt += 5 + len_domain
+
+            return tuple(rtns)
+        except IndexError as e:
+            raise ValueError("Invalid length of raw bytes chain") from e
+
+    @property
     def raw(self) -> bytes:
         """Return the BCHT Entry in its bytes form.
 
@@ -106,5 +131,136 @@ class BCHTEntry:
         return attitude_bytes + domain_name_len_bytes + domain_name_bytes
 
 
+@dataclass(frozen=True)
 class BCHTBlock:
-    ...
+    """A BCHT Block in the BCHT Blockchain.
+
+    Attributes
+    ----------
+    version : int
+        The version of the block. Must not exceed 65535
+    prev_hash : bytes
+        The SHA3-512 hash of the previous block, in bytes.
+    creation_time : int
+        The creation time in Unix epoch. Must not exceed 18446744073709551615
+    nonce : int
+        Increases on every attempt to the proof-of-work concensus. Must not exceed 4294967295
+    entries : tuple[BCHTEntry]
+        A tuple of BCHTEntry objects.
+    MAX_VERSION : int
+        Maximum value accepted for the version field.
+        This is the largest number a unsigned 16-bit number can handle.
+    MAX_TIME : int
+        Maximum value accepted for the creation_time field.
+        This is the largest number a unsigned 64-bit number can handle.
+    MAX_NONCE : int
+        Maximum value accepted for the nonce field.
+        This is the largest number a unsigned 32-bit number can handle.
+
+    Raises
+    ------
+    ValueError
+        If any of the values are invalid.
+    """
+
+    MAX_VERSION = 65535
+    MAX_TIME = 18446744073709551615
+    MAX_NONCE = 4294967295
+
+    version: int  # u16, 2 bytes
+    prev_hash: bytes  # 64 bytes
+    creation_time: int  # u64, 8 bytes
+    nonce: int  # u32, 4 bytes
+    entries: tuple[BCHTEntry]
+
+    def __post_init__(self):
+        if self.version > self.MAX_VERSION:
+            raise ValueError("version must not exceed 65535")
+        if not isinstance(self.prev_hash, bytes):
+            raise ValueError("prev_hash must be bytes")
+        if len(self.prev_hash) != 64:
+            raise ValueError("prev_hash must be 64 bytes long")
+        if self.creation_time > self.MAX_TIME:
+            raise ValueError(
+                "creation_time must not exceed 18446744073709551615")
+        if self.nonce > self.MAX_NONCE:
+            raise ValueError("nonce must not exceed 4294967295")
+        if not isinstance(self.entries, tuple):
+            raise ValueError("entries must be a tuple")
+        if any(not isinstance(e, BCHTEntry) for e in self.entries):
+            raise ValueError("items in entries must be BCHTEntry objects")
+
+    @classmethod
+    def from_raw(cls, raw: bytes) -> typing.Self:
+        """Turn raw byte into BCHT Block
+
+        Parameters
+        ----------
+        raw : bytes
+            Raw bytes of the BCHT Block
+
+        Returns
+        -------
+        BCHTBlock
+            The BCHT Block in Python object
+
+        Raises
+        ------
+        ValueError
+            If the block (or entries) format is/are incorrect.
+        """
+        if len(raw) < 78:
+            raise ValueError(
+                "BCHTBlock raw format must be longer than 78 bytes")
+        version = int.from_bytes(raw[0:2])
+        prev_hash = raw[2:66]
+        creation_time = int.from_bytes(raw[66:74])
+        nonce = int.from_bytes(raw[74:78])
+        entries = raw[78:]
+
+        entries_list = BCHTEntry.from_raw_chain(entries)
+
+        return cls(version, prev_hash, creation_time, nonce, entries_list)
+
+    @property
+    def raw(self) -> bytes:
+        """Return the BCHT Block in its bytes form.
+
+        Returns
+        -------
+        bytes
+            The BCHT Block in bytes.
+        """
+        version_bytes = struct.pack(">H", self.version)  # unsigned short
+        creation_time_bytes = struct.pack(
+            ">Q", self.creation_time)  # unsigned long long
+        nonce_bytes = struct.pack(">L", self.nonce)  # unsigned long
+        entries_bytes = tuple(e.raw for e in self.entries)
+
+        return version_bytes + self.prev_hash + creation_time_bytes + nonce_bytes + b"".join(entries_bytes)
+
+    @property
+    def hash(self) -> bytes:
+        """Return the hash of the BCHT Block.
+
+        Returns
+        -------
+        bytes
+            The hash value of the BCHT Block.
+        """
+        h = sha3_512()
+        h.update(self.raw)
+        return h.digest()
+
+    @property
+    def hexdigest(self) -> str:
+        """Return the hexadecimal digest of the BCHT Block.
+
+        Returns
+        -------
+        str
+            The hexadecimal digest of the BCHT Block.
+        """
+        h = sha3_512()
+        h.update(self.raw)
+        return h.hexdigest()

@@ -28,7 +28,7 @@ class BCHTStorageBase:
         KeyError
             If the block with the given hash is not found.
         ValueError
-            If block_hash is not a valid SHA3-256 hash.
+            If block_hash is not a valid SHA3-512 hash.
         """
 
         ...
