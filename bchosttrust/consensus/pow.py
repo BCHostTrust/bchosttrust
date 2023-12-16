@@ -45,7 +45,7 @@ def validate_block_hash(block: BCHTBlock) -> bool:
     return validate_hash(block.hash)
 
 
-def attempt(version: int, prev_hash: bytes, creation_time: int, entries: tuple[BCHTEntry], maximum_tries: int = BCHTBlock.MAX_NONCE, powf: typing.Callable = validate_block_hash) -> (typing.Union[BCHTBlock, None], int):
+def attempt(version: int, prev_hash: bytes, creation_time: int, entries: tuple[BCHTEntry], maximum_tries: int = BCHTBlock.MAX_NONCE, powf: typing.Callable = validate_hash) -> (typing.Union[BCHTBlock, None], int):
     """Attempt the proof-of-work by accuminating nonces
 
     Parameters
@@ -61,7 +61,7 @@ def attempt(version: int, prev_hash: bytes, creation_time: int, entries: tuple[B
     maximum_tries : int, optional
         Maximum tries of the proof-of-work, by default and must not exceed BCHTBlock.MAX_NONCE.
     powf : function, optional
-        Proof-of-work function accepting the BCHTBlock, by default validate_block_hash
+        Proof-of-work function accepting the block hash, by default validate_hash
 
     Returns
     -------
@@ -79,8 +79,8 @@ def attempt(version: int, prev_hash: bytes, creation_time: int, entries: tuple[B
     if maximum_tries > BCHTBlock.MAX_NONCE:
         raise ValueError(
             "maximum_tries must not exceed {}".format(BCHTBlock.MAX_NONCE))
-    for nonce in range(0, maximum_tries):
+    for nonce in range(0, maximum_tries):  # TODO: parallelization
         block = BCHTBlock(version, prev_hash, creation_time, nonce, entries)
-        if powf(block):
+        if powf(block.hash):
             return block, nonce
     return None, -1
