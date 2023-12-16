@@ -20,9 +20,6 @@ class BCHTBlockTestCase(unittest.TestCase):
             version, prev_hash, creation_time, entry_tuple)
 
         if success_block != None:
-            print(success_block)
-            print(success_block.hexdigest, num_tries)
-
             self.assertLessEqual(int.from_bytes(
                 success_block.hash), pow.HASH_TARGET)
         else:

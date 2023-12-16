@@ -4,16 +4,44 @@
 from ..internal import BCHTBlock, BCHTEntry
 import typing
 
-ZERO_BYTES = 3
+# Defines how many zero bytes are required.
+# This increases the difficulty of proof-of-work
+ZERO_BYTES = 2
 HASH_TARGET = int.from_bytes(
     (b"\x00" * ZERO_BYTES) + (b"\xFF" * (64 - ZERO_BYTES)))
 
 
-def validate_hash(hash: bytes):
+def validate_hash(hash: bytes) -> bool:
+    """Validates the given hash (in bytes) according to the proof-of-work target
+
+    Parameters
+    ----------
+    hash : bytes
+        The hash in bytes to be checked
+
+    Returns
+    -------
+    bool
+        True if the hash fits the requirements
+    """
+
     return int.from_bytes(hash) <= HASH_TARGET
 
 
-def validate_block_hash(block: BCHTBlock):
+def validate_block_hash(block: BCHTBlock) -> bool:
+    """Validates the given BCHTBlock according to the proof-of-work target
+
+    Parameters
+    ----------
+    block : BCHTBlock
+        The block to be checked
+
+    Returns
+    -------
+    bool
+        True if the block fits the requirements
+    """
+
     return validate_hash(block.hash)
 
 
@@ -48,9 +76,9 @@ def attempt(version: int, prev_hash: bytes, creation_time: int, entries: tuple[B
         If any BCHTBlock values are found to be invalid.
     """
 
-    if nonce > BCHTBlock.MAX_NONCE:
+    if maximum_tries > BCHTBlock.MAX_NONCE:
         raise ValueError(
-            "nonce must not exceed {}".format(BCHTBlock.MAX_NONCE))
+            "maximum_tries must not exceed {}".format(BCHTBlock.MAX_NONCE))
     for nonce in range(0, maximum_tries):
         block = BCHTBlock(version, prev_hash, creation_time, nonce, entries)
         if powf(block):
