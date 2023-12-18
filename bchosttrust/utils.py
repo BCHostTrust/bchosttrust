@@ -38,9 +38,41 @@ def get_data_path() -> os.PathLike:
 
             if home_directory.startswith("~"):  # Resolve failed
                 raise RuntimeError("Failed to resolve user's home directory")
+
             data_dir = os.path.join(home_directory, ".bchosttrust")
     Path(data_dir).mkdir(parents=True, exist_ok=True)
     return data_dir
+
+
+def get_cache_path() -> os.PathLike:
+    """Returns the cache path according to the operating system.
+
+    Windows: %LOCALAPPDATA%\BCHostTrust\cache
+    MacOS/Linux/Others: ~/.cache/bchosttrust
+
+    Returns
+    -------
+    os.PathLike
+        The actual path.
+
+    Raises
+    ------
+    RuntimeError
+        If the path cannot be constructed.
+    """
+
+    match system():
+        case "Windows":
+            cache_dir = os.path.join(get_data_path(), "BCHostTrust")
+        case _:
+            home_directory = os.path.expanduser("~")
+
+            if home_directory.startswith("~"):  # Resolve failed
+                raise RuntimeError("Failed to resolve user's home directory")
+
+            cache_dir = os.path.join(home_directory, ".cache", "bchosttrust")
+    Path(cache_dir).mkdir(parents=True, exist_ok=True)
+    return cache_dir
 
 
 class HashParamType(click.ParamType):
