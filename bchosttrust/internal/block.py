@@ -1,7 +1,7 @@
 import struct
 import typing
 from dataclasses import dataclass
-from hashlib import sha3_512
+from hashlib import sha3_256
 
 
 @dataclass(frozen=True)
@@ -132,7 +132,7 @@ class BCHTBlock:
     version : int
         The version of the block. Must not exceed 65535
     prev_hash : bytes
-        The SHA3-512 hash of the previous block, in bytes.
+        The SHA3-256 hash of the previous block, in bytes.
     creation_time : int
         The creation time in Unix epoch. Must not exceed 18446744073709551615
     nonce : int
@@ -160,7 +160,7 @@ class BCHTBlock:
     MAX_NONCE = 4294967295
 
     version: int  # u16, 2 bytes
-    prev_hash: bytes  # 64 bytes
+    prev_hash: bytes  # 32 bytes
     creation_time: int  # u64, 8 bytes
     nonce: int  # u32, 4 bytes
     entries: tuple[BCHTEntry]
@@ -170,8 +170,8 @@ class BCHTBlock:
             raise ValueError("version must not exceed 65535")
         if not isinstance(self.prev_hash, bytes):
             raise ValueError("prev_hash must be bytes")
-        if len(self.prev_hash) != 64:
-            raise ValueError("prev_hash must be 64 bytes long")
+        if len(self.prev_hash) != 32:
+            raise ValueError("prev_hash must be 32 bytes long")
         if self.creation_time > self.MAX_TIME:
             raise ValueError(
                 "creation_time must not exceed 18446744073709551615")
@@ -201,14 +201,15 @@ class BCHTBlock:
         ValueError
             If the block (or entries) format is/are incorrect.
         """
-        if len(raw) < 78:
+
+        if len(raw) < 46:
             raise ValueError(
-                "BCHTBlock raw format must be longer than 78 bytes")
+                "BCHTBlock raw format must be longer than 46 bytes")
         version = int.from_bytes(raw[0:2])
-        prev_hash = raw[2:66]
-        creation_time = int.from_bytes(raw[66:74])
-        nonce = int.from_bytes(raw[74:78])
-        entries = raw[78:]
+        prev_hash = raw[2:34]
+        creation_time = int.from_bytes(raw[34:42])
+        nonce = int.from_bytes(raw[42:46])
+        entries = raw[46:]
 
         entries_list = BCHTEntry.from_raw_chain(entries)
 
@@ -223,6 +224,7 @@ class BCHTBlock:
         bytes
             The BCHT Block in bytes.
         """
+
         version_bytes = struct.pack(">H", self.version)  # unsigned short
         creation_time_bytes = struct.pack(
             ">Q", self.creation_time)  # unsigned long long
@@ -240,7 +242,8 @@ class BCHTBlock:
         bytes
             The hash value of the BCHT Block.
         """
-        h = sha3_512()
+
+        h = sha3_256()
         h.update(self.raw)
         return h.digest()
 
@@ -253,6 +256,7 @@ class BCHTBlock:
         str
             The hexadecimal digest of the BCHT Block.
         """
-        h = sha3_512()
+
+        h = sha3_256()
         h.update(self.raw)
         return h.hexdigest()

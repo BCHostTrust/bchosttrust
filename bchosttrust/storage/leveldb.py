@@ -73,12 +73,12 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         KeyError
             If the block with the given hash is not found.
         ValueError
-            If block_hash is not a valid SHA3-512 hexadecimal hash.
+            If block_hash is not a valid SHA3-256 hexadecimal hash.
         RuntimeError
             If the database was closed.
         """
 
-        if len(block_hash) != 64:
+        if len(block_hash) != 32:
             raise ValueError(
                 "{} is not a valid SHA3-512 hexadecimal hash.".format(block_hash))
         get_result = self.db.get(block_hash)
@@ -100,20 +100,20 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         KeyError
             If the block with the given hash is not found.
         ValueError
-            If block_hash is not a valid SHA3-512 hexadecimal hash.
+            If block_hash is not a valid SHA3-256 hexadecimal hash.
         RuntimeError
             If the database was closed.
         """
 
-        if len(block_hash) != 64:
+        if len(block_hash) != 32:
             raise ValueError(
-                "{} is not a valid SHA3-512 hexadecimal hash.".format(block_hash))
+                "{} is not a valid SHA3-256 hexadecimal hash.".format(block_hash))
         self.db.delete(block_hash)
 
     @staticmethod
     def _attr_name(attr_name: bytes) -> bytes:
         actual_name = b"attr" + attr_name
-        if len(actual_name) == 64:  # Avoid conflicts
+        if len(actual_name) == 32:  # Avoid conflicts
             actual_name = b"x" + actual_name
         return actual_name
 

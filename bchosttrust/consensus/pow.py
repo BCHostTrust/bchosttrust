@@ -8,7 +8,7 @@ import typing
 # This increases the difficulty of proof-of-work
 ZERO_BYTES = 2
 HASH_TARGET = int.from_bytes(
-    (b"\x00" * ZERO_BYTES) + (b"\xFF" * (64 - ZERO_BYTES)))
+    (b"\x00" * ZERO_BYTES) + (b"\xFF" * (32 - ZERO_BYTES)))
 
 
 def validate_hash(hash: bytes) -> bool:

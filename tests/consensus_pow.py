@@ -13,7 +13,7 @@ class BCHTBlockTestCase(unittest.TestCase):
         entry_tuple = (entry_a, entry_b)
 
         version = 0
-        prev_hash = b"\x00" * 64
+        prev_hash = b"\x00" * 32
         creation_time = 1000
 
         success_block, num_tries = pow.attempt(

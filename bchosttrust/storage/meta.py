@@ -26,7 +26,7 @@ class BCHTStorageBase:
         KeyError
             If the block with the given hash is not found.
         ValueError
-            If block_hash is not a valid SHA3-512 hexadecimal hash.
+            If block_hash is not a valid SHA3-256 hexadecimal hash.
         """
 
         ...
@@ -55,7 +55,7 @@ class BCHTStorageBase:
         KeyError
             If the block with the given hash is not found.
         ValueError
-            If block_hash is not a valid SHA3-512 hexadecimal hash.
+            If block_hash is not a valid SHA3-256 hexadecimal hash.
         """
 
         ...

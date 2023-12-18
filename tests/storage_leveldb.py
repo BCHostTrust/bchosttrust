@@ -24,7 +24,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
         entry_a = BCHTEntry("www.google.com", 2)
         entry_b = BCHTEntry("www.example.net", 3)
         entry_tuple = (entry_a, entry_b)
-        block = BCHTBlock(0, b"\x00" * 64, 1, 4, entry_tuple)
+        block = BCHTBlock(0, b"\x00" * 32, 1, 4, entry_tuple)
 
         backend.put(block)
 
@@ -38,7 +38,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
         entry_a = BCHTEntry("www.google.com", 2)
         entry_b = BCHTEntry("www.example.net", 3)
         entry_tuple = (entry_a, entry_b)
-        block = BCHTBlock(0, b"\x00" * 64, 1, 4, entry_tuple)
+        block = BCHTBlock(0, b"\x00" * 32, 1, 4, entry_tuple)
 
         backend.put(block)
 
