@@ -35,6 +35,6 @@ class BCHTTreeTestCase(unittest.TestCase):
         list_nodes = tuple(self.db.iter_blocks())
         tree_root = tree.generate_tree(list_nodes, self.block1.hash)
 
-        self.assertTrue(tree_root.children[0].name == self.block2.hash)
-        self.assertTrue(
-            tree_root.children[0].children[0].name == self.block3.hash)
+        self.assertEqual(tree_root.children[0].name, self.block2.hash)
+        self.assertEqual(
+            tree_root.children[0].children[0].name, self.block3.hash)

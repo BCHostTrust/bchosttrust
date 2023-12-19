@@ -1,27 +1,17 @@
 # bchosttrust/tests/storage_leveldb.py
-# Test bchosttrust.storage.BCHTLevelDBStorage
-# canonical: bchosttrust.storage.leveldb.BCHTLevelDBStorage
+# Test bchosttrust.storage.BCHTDummyStorage
+# canonical: bchosttrust.storage.leveldb.BCHTDummyStorage
 
 import unittest
-import tempfile
-from os import path
 
 from bchosttrust import BCHTBlock, BCHTEntry
-from bchosttrust.storage import BCHTLevelDBStorage
+from bchosttrust.storage import BCHTDummyStorage
 from bchosttrust import attitudes
 
 
 class BCHTLevelDBStorageTestCase(unittest.TestCase):
-    def setUp(self):
-        self.temp_dir = tempfile.TemporaryDirectory()
-
-    def tearDown(self):
-        self.temp_dir.cleanup()
-
     def testReadWrite(self):
-        backend = BCHTLevelDBStorage.init_db(
-            name=path.join(self.temp_dir.name, "test.db"),
-            create_if_missing=True)
+        backend = BCHTDummyStorage()
 
         entry_a = BCHTEntry("www.google.com", 2)
         entry_b = BCHTEntry("www.example.net", 3)
@@ -33,9 +23,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
         self.assertEqual(backend.get(block.hash), block)
 
     def testDelete(self):
-        backend = BCHTLevelDBStorage.init_db(
-            name=path.join(self.temp_dir.name, "test.db"),
-            create_if_missing=True)
+        backend = BCHTDummyStorage()
 
         entry_a = BCHTEntry("www.google.com", 2)
         entry_b = BCHTEntry("www.example.net", 3)
@@ -50,9 +38,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
             backend.get(block.hash)
 
     def testAttrReadWrite(self):
-        backend = BCHTLevelDBStorage.init_db(
-            name=path.join(self.temp_dir.name, "test.db"),
-            create_if_missing=True)
+        backend = BCHTDummyStorage()
 
         attr_key = b"last_block_id"
         attr_value = b"Catgirl-Nya"
@@ -62,9 +48,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
         self.assertEqual(backend.getattr(attr_key), attr_value)
 
     def testAttrDelete(self):
-        backend = BCHTLevelDBStorage.init_db(
-            name=path.join(self.temp_dir.name, "test.db"),
-            create_if_missing=True)
+        backend = BCHTDummyStorage()
 
         attr_key = b"last_block_id"
         attr_value = b"Catgirl-Nya"
@@ -77,9 +61,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
             backend.getattr(attr_key)
 
     def testIteration(self):
-        backend = BCHTLevelDBStorage.init_db(
-            name=path.join(self.temp_dir.name, "test.db"),
-            create_if_missing=True)
+        backend = BCHTDummyStorage()
 
         block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
@@ -104,9 +86,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
             self.assertTrue(block in list_blocks)
 
     def testIterationDict(self):
-        backend = BCHTLevelDBStorage.init_db(
-            name=path.join(self.temp_dir.name, "test.db"),
-            create_if_missing=True)
+        backend = BCHTDummyStorage()
 
         block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
@@ -133,9 +113,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
             self.assertEqual(dict_blocks[block.hash], block)
 
     def testDBClose(self):
-        backend = BCHTLevelDBStorage.init_db(
-            name=path.join(self.temp_dir.name, "test.db"),
-            create_if_missing=True)
+        backend = BCHTDummyStorage()
 
         self.assertFalse(backend.closed)
 

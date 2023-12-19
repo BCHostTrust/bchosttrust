@@ -106,7 +106,7 @@ class BCHTDummyStorage:
         """
 
         for key, value in self.db.items():
-            yield (key, value)
+            yield key, value
 
     @enforced
     def getattr(self, attr_name: bytes) -> bytes:

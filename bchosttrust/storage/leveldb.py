@@ -134,7 +134,7 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         """
 
         for key, value in self.db_block:
-            return (key, value)
+            yield key, BCHTBlock.from_raw(value)
 
     @enforced
     def getattr(self, attr_name: bytes) -> bytes:
