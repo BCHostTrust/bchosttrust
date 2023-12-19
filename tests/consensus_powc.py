@@ -1,8 +1,8 @@
-# bchosttrust/tests/consensus_pow.py
-# Test bchosttrust.consensus.pow
+# bchosttrust/tests/consensus_powc.py
+# Test bchosttrust.consensus.powc
 
 import unittest
-from bchosttrust.consensus import pow
+from bchosttrust.consensus import powc
 from bchosttrust import BCHTEntry
 
 
@@ -16,12 +16,12 @@ class BCHTConsensusTestCase(unittest.TestCase):
         prev_hash = b"\x00" * 32
         creation_time = 1000
 
-        success_block, num_tries = pow.attempt(
+        success_block, _ = powc.attempt(
             version, prev_hash, creation_time, entry_tuple)
 
-        if success_block != None:
+        if success_block is not None:
             self.assertLessEqual(int.from_bytes(
-                success_block.hash), pow.HASH_TARGET)
+                success_block.hash), powc.HASH_TARGET)
         else:
             self.skipTest("Failed to find a hash")
 

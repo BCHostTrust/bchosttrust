@@ -1,10 +1,10 @@
 # bchosttrust/bchosttrust/consensus/__init__.py
 # Codes related to the consensus mechanism
 
-__all__ = ("pow", "limitations")
+__all__ = ("powc", "limitations")
 
 from bchosttrust.internal.block import BCHTBlock
-from .pow import validate_block_hash
+from .powc import validate_block_hash
 from .limitations import validate_block_limitations
 
 

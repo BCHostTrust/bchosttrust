@@ -1,8 +1,9 @@
 # bchosttrust/bchosttrust/consensus/pow.py
 # Handle proof-of-work concensus
 
-from ..internal import BCHTBlock, BCHTEntry
 import typing
+
+from ..internal import BCHTBlock, BCHTEntry
 
 # Defines how many zero bytes are required.
 # This increases the difficulty of proof-of-work
@@ -81,7 +82,7 @@ def attempt(version: int, prev_hash: bytes, creation_time: int, entries: tuple[B
 
     if maximum_tries > BCHTBlock.MAX_NONCE:
         raise ValueError(
-            "maximum_tries must not exceed {}".format(BCHTBlock.MAX_NONCE))
+            f"maximum_tries must not exceed {BCHTBlock.MAX_NONCE}")
     for nonce in range(0, maximum_tries):  # TODO: parallelization
         block = BCHTBlock(version, prev_hash, creation_time, nonce, entries)
         if powf(block.hash):
