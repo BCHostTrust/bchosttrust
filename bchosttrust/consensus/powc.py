@@ -49,7 +49,13 @@ def validate_block_hash(block: BCHTBlock) -> bool:
     return validate_hash(block.hash)
 
 
-def attempt(version: int, prev_hash: bytes, creation_time: int, entries: tuple[BCHTEntry], maximum_tries: int = BCHTBlock.MAX_NONCE, powf: typing.Callable = validate_hash) -> (typing.Union[BCHTBlock, None], int):
+def attempt(
+        version: int,
+        prev_hash: bytes,
+        creation_time: int,
+        entries: tuple[BCHTEntry],
+        maximum_tries: int = BCHTBlock.MAX_NONCE,
+        powf: typing.Callable = validate_hash) -> (typing.Union[BCHTBlock, None], int):
     """Attempt the proof-of-work by accuminating nonces
 
     Parameters
