@@ -1,0 +1,99 @@
+# bchosttrust/bchosttrust/storage/import.py
+# Handle import of blocks
+
+from ..internal.block import BCHTBlock
+from ..consensus import validate
+from . import BCHTStorageBase
+
+
+def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
+    """Parse the list of hashes of current blocks 
+    stored in the database into tuple.
+
+    Parameters
+    ----------
+    backend : BCHTStorageBase
+        The storage backend to be used.
+
+    Returns
+    -------
+    tuple[bytes]
+        List of SHA3-256 hashes, or an 
+        empty tuple if "curr_hashes" is not found 
+        in the attributes database.
+    """
+
+    # 1. Get `curr_hashes` from attribute database (.getattr)
+    #    if KeyError, just return a empty tuple
+    # 2. Slice the retrieved byte by the length of SHA3-256 hashes
+    # 3. Return the sliced bytes in tuple
+
+
+def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
+    """Appends a new hash into the list of current blocks
+
+    Parameters
+    ----------
+    backend : BCHTStorageBase
+        The storage backend to be used.
+    new_hash : bytes
+        The hash of the new block to be added.
+    """
+
+    # 1. Get `curr_hashes` from attribute database (.getattr)
+    #    if KeyError, it should be an empty byte string (b"")
+    # 2. Append new_hash into it
+    # 3. Set the new curr_hashes into the attribute database
+
+
+def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
+    """Get a list of current blocks
+
+    Parameters
+    ----------
+    backend : BCHTStorageBase
+        The storage backend to be used
+
+    Returns
+    -------
+    tuple[BCHTBlock]
+        Tuple of BCHTBlock objects
+    """
+
+    # 1. Use parse_curr_hashes to get a tuple of hashes
+    # 2. For each of them, retrieve them from the blocks database
+    #    (backend.get())
+    # 3. Put them into a tuple and then return it
+    # (2 and 3 can be done in a single line using inline generators)
+
+
+def import_block(backend: BCHTStorageBase, block: BCHTBlock):
+    """Import a block into the BCHT Database
+
+    Parameters
+    ----------
+    backend : BCHTStorageBase
+        The storage backend to be used.
+    block : BCHTBlock
+        The block to be imported.
+
+    Raises
+    ------
+    ValueError
+        If the block is invalid
+    """
+
+    # 1. Check the creation time of the block against the block
+    #    specified by its `prev_hash`. If this block is earlier than
+    #    the later block, of course reject it by raising a ValueError.
+    # 2. Check the block against the consensus using the
+    #    bchosttrust.consensus.validate function.
+    #    If the block fails, reject it.
+    # 3. Add the hash into the database (backend.put).
+    # 4. Check if the `prev_hash` of the block is the same as
+    #    `prev_hash` in the attribute database. If yes, Append this block's
+    #    hash to `curr_hashes` of the attribute database.
+    # 5. Otherwise, check if the `prev_hash` of the block is one of the
+    #    hashes listed in `curr_hashes`. If yes, replace `prev_hash`
+    #    in the attribute database with this block's `prev_hash`, and replace
+    #    `curr_hashes` in the attribute database with this block's hash.
