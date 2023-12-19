@@ -1,4 +1,4 @@
-# bchosttrust/bchosttrust/storage/import.py
+# bchosttrust/bchosttrust/storage/import_block.py
 # Handle import of blocks
 
 from ..internal.block import BCHTBlock

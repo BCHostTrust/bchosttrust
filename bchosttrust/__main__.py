@@ -5,11 +5,17 @@ import importlib
 import click
 
 from .cli import __all__ as list_clis
+from .storage import get_default_storage
 
 
 @click.group()
-def cli():
+@click.pass_context
+def cli(ctx):
     """BCHostTrust Command-line Script"""
+
+    # get the default storage backend
+    # TODO: Allow the user to configure this
+    ctx.storage = get_default_storage()
 
 
 # Registers all commands into the main script.

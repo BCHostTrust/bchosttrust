@@ -5,7 +5,6 @@ from time import strftime
 import click
 from click import echo
 
-from ..storage import get_default_storage
 from ..utils import HashParamType
 
 
@@ -14,10 +13,11 @@ from ..utils import HashParamType
               type=click.Choice(("raw", "user"), case_sensitive=False),
               default="user")
 @click.argument('block_hash', type=HashParamType())
-def cli(output_format, block_hash):
+@click.pass_context
+def cli(ctx, output_format, block_hash):
     """Get a block by its SHA3-256 hash."""
 
-    storage = get_default_storage()
+    storage = ctx.storage
 
     try:
         block = storage.get(block_hash)
