@@ -3,10 +3,10 @@
 
 import unittest
 from bchosttrust.consensus import pow
-from bchosttrust import BCHTEntry, BCHTBlock
+from bchosttrust import BCHTEntry
 
 
-class BCHTBlockTestCase(unittest.TestCase):
+class BCHTConsensusTestCase(unittest.TestCase):
     def test_pow(self):
         entry_a = BCHTEntry("www.google.com", 2)
         entry_b = BCHTEntry("www.example.net", 3)
