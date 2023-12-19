@@ -60,6 +60,28 @@ class BCHTStorageBase:
 
         ...
 
+    def iter_blocks(self) -> typing.Generator[BCHTBlock, None, None]:
+        """Return a iterable returning of BCHT Blocks, unordered.
+
+        Yields
+        ------
+        BCHTBlock
+            BCHT Blocks
+        """
+
+        ...
+
+    def iter_blocks_with_key(self) -> typing.Generator[tuple[bytes, BCHTBlock], None, None]:
+        """Return a iterable returning of BCHT Blocks, unordered, with keys.
+
+        Yields
+        ------
+        tuple[bytes, BCHTBlock]
+            hash as keys, BCHT Blocks as values.
+        """
+
+        ...
+
     def getattr(self, attr_name: bytes) -> bytes:
         """Retrieve an attibute from the database
 

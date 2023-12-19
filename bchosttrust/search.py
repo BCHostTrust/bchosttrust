@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/search.py
-# Perform searching on the BCHT chain
+# Perform down-to-top searching on the BCHT chain
 
 from collections import defaultdict
 

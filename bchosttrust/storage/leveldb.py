@@ -22,6 +22,8 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
     def __init__(self, db: LDB):
         self.db = db
+        self.db_block = db.prefixed_db(b'block-')
+        self.db_attr = db.prefixed_db(b'attr-')
 
     @classmethod
     def init_db(cls, *args, **kwargs) -> typing.Self:
@@ -52,7 +54,7 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         block_hash = block_data.hash
         block_data = block_data.raw
-        self.db.put(block_hash, block_data)
+        self.db_block.put(block_hash, block_data)
 
     @enforced
     def get(self, block_hash: bytes) -> BCHTBlock:
@@ -81,7 +83,7 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         if len(block_hash) != 32:
             raise ValueError(
                 "{} is not a valid SHA3-512 hexadecimal hash.".format(block_hash))
-        get_result = self.db.get(block_hash)
+        get_result = self.db_block.get(block_hash)
         if get_result == None:  # i.e. not found
             raise KeyError("{} not found in the database.".format(block_hash))
         return BCHTBlock.from_raw(get_result)
@@ -108,14 +110,31 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         if len(block_hash) != 32:
             raise ValueError(
                 "{} is not a valid SHA3-256 hexadecimal hash.".format(block_hash))
-        self.db.delete(block_hash)
+        self.db_block.delete(block_hash)
 
-    @staticmethod
-    def _attr_name(attr_name: bytes) -> bytes:
-        actual_name = b"attr" + attr_name
-        if len(actual_name) == 32:  # Avoid conflicts
-            actual_name = b"x" + actual_name
-        return actual_name
+    def iter_blocks(self) -> typing.Generator[BCHTBlock, None, None]:
+        """Return a iterable returning of BCHT Blocks, unordered.
+
+        Yields
+        ------
+        BCHTBlock
+            BCHT Blocks
+        """
+
+        for raw in self.db_block.iterator(include_key=False):
+            yield BCHTBlock.from_raw(raw)
+
+    def iter_blocks_with_key(self) -> typing.Generator[tuple[bytes, BCHTBlock], None, None]:
+        """Return a iterable returning of BCHT Blocks, unordered, with keys.
+
+        Yields
+        ------
+        tuple[bytes, BCHTBlock]
+            hash as keys, BCHT Blocks as values.
+        """
+
+        for key, value in self.db_block:
+            return (key, value)
 
     @enforced
     def getattr(self, attr_name: bytes) -> bytes:
@@ -141,10 +160,9 @@ class BCHTLevelDBStorage(BCHTStorageBase):
             If the database was closed.
         """
 
-        actual_name = self._attr_name(attr_name)
-        rtn = self.db.get(actual_name)
+        rtn = self.db_attr.get(attr_name)
         if rtn == None:
-            raise KeyError("{} not found in the database.".format(actual_name))
+            raise KeyError("{} not found in the database.".format(attr_name))
         return rtn
 
     @enforced
@@ -166,8 +184,7 @@ class BCHTLevelDBStorage(BCHTStorageBase):
             If the database was closed.
         """
 
-        actual_name = self._attr_name(attr_name)
-        self.db.put(actual_name, content)
+        self.db_attr.put(attr_name, content)
 
     @enforced
     def delattr(self, attr_name: bytes):
@@ -188,8 +205,7 @@ class BCHTLevelDBStorage(BCHTStorageBase):
             If the database was closed.
         """
 
-        actual_name = self._attr_name(attr_name)
-        self.db.delete(actual_name)
+        self.db_attr.delete(attr_name)
 
     def close(self):
         """Closes the LevelDB."""

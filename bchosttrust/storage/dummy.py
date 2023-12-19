@@ -84,6 +84,30 @@ class BCHTDummyStorage:
                 "{} is not a valid SHA3-512 hexadecimal hash.".format(block_hash))
         del self.db[block_hash]
 
+    def iter_blocks(self) -> typing.Generator[BCHTBlock, None, None]:
+        """Return a iterable returning of BCHT Blocks, unordered.
+
+        Yields
+        ------
+        BCHTBlock
+            BCHT Blocks
+        """
+
+        for _, value in self.db.items():
+            yield value
+
+    def iter_blocks_with_key(self) -> typing.Generator[tuple[bytes, BCHTBlock], None, None]:
+        """Return a iterable returning of BCHT Blocks, unordered, with keys.
+
+        Yields
+        ------
+        tuple[bytes, BCHTBlock]
+            hash as keys, BCHT Blocks as values.
+        """
+
+        for key, value in self.db.items():
+            yield (key, value)
+
     @enforced
     def getattr(self, attr_name: bytes) -> bytes:
         """Retrieve an attibute from the database
