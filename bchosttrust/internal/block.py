@@ -1,3 +1,6 @@
+# bchosttrust/bchosttrust/internal/block.py
+# BCHostTrust Blockchain Structure
+
 import struct
 import typing
 from dataclasses import dataclass
@@ -84,11 +87,10 @@ class BCHTEntry:
         return cls(domain_name, attitude)
 
     @classmethod
-    def from_raw_chain(cls, raw_bytes_chain: bytes) -> tuple[typing.Self]:
+    def iter_raw_chain(cls, raw_bytes_chain: bytes) -> typing.Generator[tuple[typing.Self], None, None]:
         try:
             len_entries = len(raw_bytes_chain)
             pt = 0
-            rtns = []
 
             while pt < len_entries:
                 raw_bytes = raw_bytes_chain[pt:pt+5]
@@ -97,12 +99,14 @@ class BCHTEntry:
                 domain_name_bytes = raw_bytes_chain[pt+5:pt+5+len_domain]
                 raw_bytes += domain_name_bytes
 
-                rtns.append(BCHTEntry.from_raw(raw_bytes))
                 pt += 5 + len_domain
-
-            return tuple(rtns)
+                yield BCHTEntry.from_raw(raw_bytes)
         except IndexError as e:
             raise ValueError("Invalid length of raw bytes chain") from e
+
+    @classmethod
+    def from_raw_chain(cls, raw_bytes_chain: bytes) -> tuple[typing.Self]:
+        return tuple(cls.iter_raw_chain(raw_bytes_chain))
 
     @property
     def raw(self) -> bytes:

@@ -1,10 +1,11 @@
 # bchosttrust/bchosttrust/internal/storage.py
 # Expose common classes and functions directly to the bchosttrust.storage namespace
 
-__all__ = ("leveldb", "meta")
+__all__ = ("leveldb", "meta", "dummy")
 
 from .meta import BCHTStorageBase
 from .leveldb import BCHTLevelDBStorage
+from .dummy import BCHTDummyStorage
 from ..utils import get_data_path
 import os
 

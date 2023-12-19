@@ -11,12 +11,12 @@ HASH_TARGET = int.from_bytes(
     (b"\x00" * ZERO_BYTES) + (b"\xFF" * (32 - ZERO_BYTES)))
 
 
-def validate_hash(hash: bytes) -> bool:
+def validate_hash(bhash: bytes) -> bool:
     """Validates the given hash (in bytes) according to the proof-of-work target
 
     Parameters
     ----------
-    hash : bytes
+    bhash : bytes
         The hash in bytes to be checked
 
     Returns
@@ -25,7 +25,10 @@ def validate_hash(hash: bytes) -> bool:
         True if the hash fits the requirements
     """
 
-    return int.from_bytes(hash) <= HASH_TARGET
+    if bhash == (b"\x00" * 32):
+        # Avoid recursion because the prev_hash of the first block is 0
+        return False
+    return int.from_bytes(bhash) <= HASH_TARGET
 
 
 def validate_block_hash(block: BCHTBlock) -> bool:
