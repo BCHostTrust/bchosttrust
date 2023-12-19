@@ -14,6 +14,18 @@ authors = [
     {name = "Lewis Chen", email = "bestnoodles101@gmail.com"},
     {email = "bchosttrust@1f616emo.xyz"}
 ]
+requires-python = ">= 3.10"
+classifiers = [ # See https://pypi.org/classifiers/
+  "Development Status :: 2 - Pre-Alpha",
+
+  "Intended Audience :: Developers",
+  "Topic :: System :: Networking",
+  "Environment :: Web Environment",
+
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
 
 [project.scripts]
 bcht = "bchosttrust.__main__:cli"

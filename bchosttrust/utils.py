@@ -46,6 +46,7 @@ def get_data_path() -> os.PathLike:
 
 def get_cache_path() -> os.PathLike:
     """Returns the cache path according to the operating system.
+    Contents in this path should not be regared as permamant.
 
     Windows: %LOCALAPPDATA%\BCHostTrust\cache
     MacOS/Linux/Others: ~/.cache/bchosttrust
