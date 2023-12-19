@@ -2,6 +2,7 @@
 # Power-unrelated limitations to BCHT blocks
 
 from collections import Counter
+from type_enforced import Enforcer as enforced
 
 from bchosttrust.internal.block import BCHTBlock
 
@@ -9,6 +10,7 @@ from bchosttrust.internal.block import BCHTBlock
 MAX_ENTRIES = 10
 
 
+@enforced
 def validate_block_limitations(block: BCHTBlock) -> bool:
     """validate a BCHT Block according to power-unrelated consensus
 

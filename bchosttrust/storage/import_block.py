@@ -6,6 +6,11 @@ from ..consensus import validate
 from . import BCHTStorageBase
 
 
+# Add block into database: backend.put(block)
+# Get block from database: backend.get(hash)
+# Set attribute: backend.setattr(key, value)
+# Get attrioute: backend.getattr(key)
+
 def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
     """Parse the list of hashes of current blocks 
     stored in the database into tuple.
@@ -24,8 +29,9 @@ def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
     """
 
     # 1. Get `curr_hashes` from attribute database (.getattr)
-    #    if KeyError, just return a empty tuple
+    #    if KeyError (i.e. the key does not exist), just return a empty tuple
     # 2. Slice the retrieved byte by the length of SHA3-256 hashes
+    #    Example: https://stackoverflow.com/a/20024864
     # 3. Return the sliced bytes in tuple
 
 
@@ -41,8 +47,8 @@ def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
     """
 
     # 1. Get `curr_hashes` from attribute database (.getattr)
-    #    if KeyError, it should be an empty byte string (b"")
-    # 2. Append new_hash into it
+    #    if KeyError, it should return an empty byte string (b"")
+    # 2. Append new_hash into `curr_hashes`
     # 3. Set the new curr_hashes into the attribute database
 
 
@@ -83,17 +89,20 @@ def import_block(backend: BCHTStorageBase, block: BCHTBlock):
         If the block is invalid
     """
 
-    # 1. Check the creation time of the block against the block
-    #    specified by its `prev_hash`. If this block is earlier than
-    #    the later block, of course reject it by raising a ValueError.
+    # 1. Get the previous block from block.prev_hash.
+    # 2. Check the creation time of the previous block.
+    #    If this block is earlier than the later block, of course
+    #    reject it by raising a ValueError.
     # 2. Check the block against the consensus using the
     #    bchosttrust.consensus.validate function.
-    #    If the block fails, reject it.
+    #    If the block fails, reject it by raising a ValueError.
     # 3. Add the hash into the database (backend.put).
     # 4. Check if the `prev_hash` of the block is the same as
-    #    `prev_hash` in the attribute database. If yes, Append this block's
-    #    hash to `curr_hashes` of the attribute database.
+    #    `prev_hash` in the attribute database.
+    #    - If yes, Append this block's
+    #      hash to `curr_hashes` of the attribute database.
     # 5. Otherwise, check if the `prev_hash` of the block is one of the
-    #    hashes listed in `curr_hashes`. If yes, replace `prev_hash`
-    #    in the attribute database with this block's `prev_hash`, and replace
-    #    `curr_hashes` in the attribute database with this block's hash.
+    #    hashes listed in `curr_hashes`.
+    #    - If yes, replace `prev_hash`
+    #      in the attribute database with this block's `prev_hash`, and replace
+    #      `curr_hashes` in the attribute database with this block's hash.

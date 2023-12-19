@@ -2,6 +2,7 @@
 # Handle proof-of-work concensus
 
 import typing
+from type_enforced import Enforcer as enforced
 
 from ..internal import BCHTBlock, BCHTEntry
 
