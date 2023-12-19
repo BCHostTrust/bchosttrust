@@ -23,6 +23,11 @@ class BCHTConsensusTestCase(unittest.TestCase):
 
         self.assertFalse(limitations.validate_block_limitations(block1))
 
+    def test_failed_empty(self):
+        block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, tuple())
+
+        self.assertFalse(limitations.validate_block_limitations(block1))
+
     def test_failed_duplicate(self):
         block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
