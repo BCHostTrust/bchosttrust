@@ -2,6 +2,7 @@
 # Test bchosttrust.consensus.limitations
 
 import unittest
+
 from bchosttrust.consensus import limitations
 from bchosttrust import BCHTEntry, BCHTBlock
 from bchosttrust import attitudes

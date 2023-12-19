@@ -3,15 +3,16 @@
 
 __all__ = ("leveldb", "meta", "dummy")
 
+import os
+
 from .meta import BCHTStorageBase
 from .leveldb import BCHTLevelDBStorage
 from .dummy import BCHTDummyStorage
 from ..utils import get_data_path
-import os
 
 
 def get_default_storage() -> BCHTStorageBase:
-    """The default storage backend.
+    r"""The default storage backend.
     It is hoped that one day we can read user's configuration file
     and allow users to choose. But anyway, just make it work for now.
 

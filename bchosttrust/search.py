@@ -74,7 +74,9 @@ def get_website_votes(backend: BCHTStorageBase, bhash: bytes) -> defaultdict[str
     return result
 
 
-def get_website_rating(backend: BCHTStorageBase, bhash: bytes, error_on_invalid: bool = False) -> dict[str, int]:
+def get_website_rating(
+        backend: BCHTStorageBase,
+        bhash: bytes) -> dict[str, int]:
     """Get the rating of a hostname by their votes.
 
     Parameters
@@ -83,8 +85,6 @@ def get_website_rating(backend: BCHTStorageBase, bhash: bytes, error_on_invalid:
         The storage backend to be used.
     bhash : bytes
         The hash of the starting block. See iter_from_block(...) for more details.
-    error_on_invalid : bool
-        Whether to raise an error if an invalid attitude is found. 
 
     Returns
     -------

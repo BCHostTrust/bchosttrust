@@ -1,14 +1,14 @@
 # bchosttrust/bchosttrust/utils.py
 # Utilities used internally
 
-import os
-import click
 from platform import system
 from pathlib import Path
+import os
+import click
 
 
 def get_data_path() -> os.PathLike:
-    """Returns the data path according to the operating system.
+    r"""Returns the data path according to the operating system.
 
     Windows: %LOCALAPPDATA%\BCHostTrust
     MacOS/Linux/Others: ~/.bchosttrust
@@ -45,7 +45,7 @@ def get_data_path() -> os.PathLike:
 
 
 def get_cache_path() -> os.PathLike:
-    """Returns the cache path according to the operating system.
+    r"""Returns the cache path according to the operating system.
     Contents in this path should not be regared as permamant.
 
     Windows: %LOCALAPPDATA%\BCHostTrust\cache

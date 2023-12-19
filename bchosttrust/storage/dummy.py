@@ -1,20 +1,22 @@
 # bchosttrust/bchosttrust/storage/dummy.py
 # Stores everythin on RAM, vanishes as the program exits
-# WARNING: This is not suitable for command-line tests! Use LevelDB in a temporary directory instead.
+# WARNING: This is not suitable for command-line tests!
+#          Use LevelDB in a temporary directory instead.
 
-from .meta import BCHTStorageBase
-from .. import BCHTBlock
 import typing
 from type_enforced import Enforcer as enforced
 
+from .meta import BCHTStorageBase
+from .. import BCHTBlock
 
-class BCHTDummyStorage:
+
+class BCHTDummyStorage(BCHTStorageBase):
     """BCHT in-RAM storage backend"""
 
     def __init__(self):
         self.db = {}
         self.attr_db = {}
-        self.closed = False
+        self._closed = False
 
     @enforced
     def get(self, block_hash: bytes) -> BCHTBlock:
@@ -42,7 +44,7 @@ class BCHTDummyStorage:
             raise RuntimeError("Database is closed.")
         if len(block_hash) != 32:
             raise ValueError(
-                "{} is not a valid SHA3-512 hexadecimal hash.".format(block_hash))
+                f"{block_hash} is not a valid SHA3-512 hexadecimal hash.")
         return self.db[block_hash]  # raise KeyError if not found
 
     @enforced
@@ -81,7 +83,7 @@ class BCHTDummyStorage:
             raise RuntimeError("Database is closed.")
         if len(block_hash) != 32:
             raise ValueError(
-                "{} is not a valid SHA3-512 hexadecimal hash.".format(block_hash))
+                f"{block_hash} is not a valid SHA3-512 hexadecimal hash.")
         del self.db[block_hash]
 
     def iter_blocks(self) -> typing.Generator[BCHTBlock, None, None]:
@@ -176,9 +178,13 @@ class BCHTDummyStorage:
             raise RuntimeError("Database is closed.")
         del self.attr_db[attr_name]
 
+    @property
+    def closed(self):
+        return self._closed
+
     def close(self):
         """Close the database."""
 
-        self.closed = True
+        self._closed = True
         del self.db
         del self.attr_db

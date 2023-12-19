@@ -3,6 +3,7 @@
 # canonical: bchosttrust.internal.block.BCHTBlock
 
 import unittest
+
 from bchosttrust import BCHTBlock, BCHTEntry
 
 

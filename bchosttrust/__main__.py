@@ -1,8 +1,9 @@
 # bchosttrust/bchosttrust/__main__.py
 # Handle python3 -m bchosttrust and direct command
 
-import click
 import importlib
+import click
+
 from .cli import __all__ as list_clis
 
 

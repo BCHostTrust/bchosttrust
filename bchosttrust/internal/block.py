@@ -45,8 +45,9 @@ class BCHTEntry:
         try:
             domain_name_bytes = self.domain_name.encode("ascii")
         except UnicodeEncodeError as e:
-            raise ValueError(
-                "Domain name must only contain ASCII charactor. If non-ASCII charactors exists, escape them with IDNA encoding first.")
+            raise ValueError("Domain name must only contain ASCII charactor. "
+                             "If non-ASCII charactors exists, "
+                             "escape them with IDNA encoding first.") from e
         if len(domain_name_bytes) > self.MAX_DOMAIN_LENGTH:
             raise ValueError(
                 "Length of domain name must not exceed 4294967295.")

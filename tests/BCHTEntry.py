@@ -34,6 +34,10 @@ class BCHTEntryTestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             BCHTEntry.from_raw(raw)
 
+    def testIllegalDomainName(self):
+        with self.assertRaises(ValueError):
+            BCHTEntry("早上好.中國", 1)
+
     def testShortRawLength(self):
         raw = b'\x01\x02'
         with self.assertRaises(ValueError):

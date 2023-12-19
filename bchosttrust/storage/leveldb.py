@@ -1,11 +1,12 @@
 # bchosttrust/bchosttrust/storage/leveldb.py
 # Stores everything in LevelDB
 
-from .meta import BCHTStorageBase
-from .. import BCHTBlock
-from plyvel import DB as LDB
 import typing
 from type_enforced import Enforcer as enforced
+from plyvel import DB as LDB
+
+from .meta import BCHTStorageBase
+from .. import BCHTBlock
 
 
 class BCHTLevelDBStorage(BCHTStorageBase):
@@ -27,8 +28,10 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
     @classmethod
     def init_db(cls, *args, **kwargs) -> typing.Self:
-        """Create a BCHT LevelDB Storage backend with parameters passed into a plyvel.DB constructor.
-        See https://plyvel.readthedocs.io/en/latest/api.html#DB.__init__ for what to pass into this function.
+        """Create a BCHT LevelDB Storage backend with parameters 
+        passed into a plyvel.DB constructor.
+        See https://plyvel.readthedocs.io/en/latest/api.html#DB.__init__ 
+        for what to pass into this function.
 
         Returns
         -------
@@ -82,10 +85,10 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         if len(block_hash) != 32:
             raise ValueError(
-                "{} is not a valid SHA3-512 hexadecimal hash.".format(block_hash))
+                f"{block_hash} is not a valid SHA3-512 hexadecimal hash.")
         get_result = self.db_block.get(block_hash)
-        if get_result == None:  # i.e. not found
-            raise KeyError("{} not found in the database.".format(block_hash))
+        if get_result is None:  # i.e. not found
+            raise KeyError(f"{block_hash} not found in the database.")
         return BCHTBlock.from_raw(get_result)
 
     @enforced
@@ -109,7 +112,7 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         if len(block_hash) != 32:
             raise ValueError(
-                "{} is not a valid SHA3-256 hexadecimal hash.".format(block_hash))
+                f"{block_hash} is not a valid SHA3-256 hexadecimal hash.")
         self.db_block.delete(block_hash)
 
     def iter_blocks(self) -> typing.Generator[BCHTBlock, None, None]:
@@ -162,7 +165,7 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         rtn = self.db_attr.get(attr_name)
         if rtn == None:
-            raise KeyError("{} not found in the database.".format(attr_name))
+            raise KeyError(f"{attr_name} not found in the database.")
         return rtn
 
     @enforced

@@ -1,13 +1,10 @@
 # bchosttrust/bchosttrust/tree.py
 # Perform top-to-down searching on the BCHT chain
 
+from typing import Iterable
 from anytree import Node
-from collections import defaultdict
 
-from .storage import BCHTStorageBase
-from typing import Generator, Iterable
 from .internal import BCHTBlock
-from . import attitudes
 
 
 def get_child(block_list: Iterable[BCHTBlock], from_block: bytes) -> tuple[BCHTBlock]:

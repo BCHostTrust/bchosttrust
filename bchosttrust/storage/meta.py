@@ -1,6 +1,8 @@
 # bchosttrust/bchosttrust/storage/meta.py
 # Base Classes of storage backends
 
+# pylint: disable=unused-argument
+
 import typing
 from ..internal import BCHTBlock
 
@@ -29,8 +31,6 @@ class BCHTStorageBase:
             If block_hash is not a valid SHA3-256 hexadecimal hash.
         """
 
-        ...
-
     def put(self, block_data: BCHTBlock):
         """Put the given block into the database.
 
@@ -39,8 +39,6 @@ class BCHTStorageBase:
         block_data : BCHTBlock
             The BCHTBlock object to be stored.
         """
-
-        ...
 
     def delete(self, block_hash: bytes):
         """Delete a block in the chain by its hash.
@@ -58,8 +56,6 @@ class BCHTStorageBase:
             If block_hash is not a valid SHA3-256 hexadecimal hash.
         """
 
-        ...
-
     def iter_blocks(self) -> typing.Generator[BCHTBlock, None, None]:
         """Return a iterable returning of BCHT Blocks, unordered.
 
@@ -69,8 +65,6 @@ class BCHTStorageBase:
             BCHT Blocks
         """
 
-        ...
-
     def iter_blocks_with_key(self) -> typing.Generator[tuple[bytes, BCHTBlock], None, None]:
         """Return a iterable returning of BCHT Blocks, unordered, with keys.
 
@@ -79,8 +73,6 @@ class BCHTStorageBase:
         tuple[bytes, BCHTBlock]
             hash as keys, BCHT Blocks as values.
         """
-
-        ...
 
     def getattr(self, attr_name: bytes) -> bytes:
         """Retrieve an attibute from the database
@@ -103,8 +95,6 @@ class BCHTStorageBase:
             If the key is not bytes, or if not accepted by the backend.
         """
 
-        ...
-
     def setattr(self, attr_name: bytes, content: bytes):
         """Set an attibute into the database
 
@@ -120,8 +110,6 @@ class BCHTStorageBase:
         ValueError
             If the data or key is not bytes, or if not accepted by the backend.
         """
-
-        ...
 
     def delattr(self, attr_name: bytes):
         """Delete an attibute from the database
@@ -139,12 +127,8 @@ class BCHTStorageBase:
             If the key is not bytes, or if not accepted by the backend.
         """
 
-        ...
-
     def close(self):
         """Close the database."""
-
-        ...
 
     @property
     def closed(self) -> bool:
@@ -155,5 +139,3 @@ class BCHTStorageBase:
         bool
             If False, the backend is no longer usable.
         """
-
-        ...
