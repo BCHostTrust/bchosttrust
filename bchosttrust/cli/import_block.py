@@ -1,7 +1,6 @@
 # bchosttrust/bchosttrust/cli/import_block.py
 # Import blocks from a file or standard input
 
-from time import strftime
 import click
 from click import echo
 

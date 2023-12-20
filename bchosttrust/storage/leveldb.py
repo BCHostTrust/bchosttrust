@@ -164,7 +164,7 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         """
 
         rtn = self.db_attr.get(attr_name)
-        if rtn == None:
+        if rtn is None:
             raise KeyError(f"{attr_name} not found in the database.")
         return rtn
 

@@ -1,10 +1,10 @@
-# bchosttrust/bchosttrust/consensus/pow.py
+# bchosttrust/bchosttrust/consensus/powc.py
 # Handle proof-of-work concensus
 
 import typing
-from type_enforced import Enforcer as enforced
 
 from ..internal import BCHTBlock, BCHTEntry
+
 
 # Defines how many zero bytes are required.
 # This increases the difficulty of proof-of-work

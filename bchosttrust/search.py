@@ -2,9 +2,9 @@
 # Perform down-to-top searching on the BCHT chain
 
 from collections import defaultdict
+from typing import Generator
 
 from .storage import BCHTStorageBase
-from typing import Generator
 from .internal import BCHTBlock
 from . import attitudes
 
@@ -39,7 +39,7 @@ def iter_from_block(backend: BCHTStorageBase, bhash: bytes) -> Generator[BCHTBlo
     while True:
         try:
             block = backend.get(bhash)
-        except KeyError as e:
+        except KeyError:
             return  # https://peps.python.org/pep-0479/
         bhash = block.prev_hash
         yield block
@@ -57,7 +57,7 @@ def get_website_votes(backend: BCHTStorageBase, bhash: bytes) -> defaultdict[str
 
     Returns
     -------
-    colections.defaultdict[str, dict[int, int]]
+    colections.defaultdict[str, defaultdict[int, int]]
         A dictionary with website domain names as key, and a dictionary
         as its value. The later dictionary is indexed by the attitude and 
         contains the number of votes.

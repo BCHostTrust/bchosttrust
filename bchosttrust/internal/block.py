@@ -23,7 +23,7 @@ class BCHTEntry:
     MAX_DOMAIN_LENGTH : int
         Maximum length accepted in the domain_name field.
         This is the largest number a unsigned 32-bit number can handle.
-    MAX_ATTITUDE : inr
+    MAX_ATTITUDE : int
         Maximum value of the attitude field.
         This is the largest number a unsigned 8-bit number can handle.
 
