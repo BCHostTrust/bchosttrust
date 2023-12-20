@@ -4,9 +4,9 @@
 from collections import defaultdict
 from typing import Generator
 
-from .storage import BCHTStorageBase
-from .internal import BCHTBlock
-from . import attitudes
+from ..storage import BCHTStorageBase
+from ..internal import BCHTBlock
+from .. import attitudes
 
 
 def iter_from_block(backend: BCHTStorageBase, bhash: bytes) -> Generator[BCHTBlock, None, None]:

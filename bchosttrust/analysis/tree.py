@@ -4,7 +4,7 @@
 from typing import Iterable
 from anytree import Node
 
-from .internal import BCHTBlock
+from ..internal import BCHTBlock
 
 
 def get_child(block_list: Iterable[BCHTBlock], from_block: bytes) -> tuple[BCHTBlock]:

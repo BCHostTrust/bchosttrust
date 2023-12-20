@@ -17,18 +17,18 @@ class BCHTImportBlockTestCase(unittest.TestCase):
         self.db = BCHTDummyStorage()
 
         self.blocks = []
-        self.blocks[0] = BCHTBlock(1, b"\x00" * 32, 0, 4, (
+        self.blocks.append(BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
             BCHTEntry("www.example.net", attitudes.DOWNVOTE)
-        ))
-        self.blocks[1] = BCHTBlock(1, self.blocks[0].hash, 1, 4, (
+        )))
+        self.blocks.append(BCHTBlock(1, self.blocks[0].hash, 1, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
             BCHTEntry("www.example.net", attitudes.DOWNVOTE)
-        ))
-        self.blocks[2] = BCHTBlock(1, self.blocks[0].hash, 2, 4, (
+        )))
+        self.blocks.append(BCHTBlock(1, self.blocks[0].hash, 2, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
             BCHTEntry("www.example.net", attitudes.DOWNVOTE)
-        ))
+        )))
 
         for block in self.blocks:
             self.db.put(block)

@@ -34,6 +34,9 @@ def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
     #    Example: https://stackoverflow.com/a/20024864
     # 3. Return the sliced bytes in tuple
 
+    # Remove the following line before start working
+    raise NotImplementedError
+
 
 def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
     """Appends a new hash into the list of current blocks
@@ -50,6 +53,9 @@ def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
     #    if KeyError, it should return an empty byte string (b"")
     # 2. Append new_hash into `curr_hashes`
     # 3. Set the new curr_hashes into the attribute database
+
+    # Remove the following line before start working
+    raise NotImplementedError
 
 
 def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
@@ -71,6 +77,9 @@ def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
     #    (backend.get())
     # 3. Put them into a tuple and then return it
     # (2 and 3 can be done in a single line using inline generators)
+
+    # Remove the following line before start working
+    raise NotImplementedError
 
 
 def import_block(backend: BCHTStorageBase, block: BCHTBlock):
@@ -106,3 +115,6 @@ def import_block(backend: BCHTStorageBase, block: BCHTBlock):
     #    - If yes, replace `prev_hash`
     #      in the attribute database with this block's `prev_hash`, and replace
     #      `curr_hashes` in the attribute database with this block's hash.
+
+    # Remove the following line before start working
+    raise NotImplementedError
