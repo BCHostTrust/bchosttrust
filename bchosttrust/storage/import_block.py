@@ -1,8 +1,6 @@
 # bchosttrust/bchosttrust/storage/import_block.py
 # Handle import of blocks
 
-from type_enforced import Enforcer as enforced
-
 from ..internal.block import BCHTBlock
 from ..consensus import validate
 from . import BCHTStorageBase
@@ -13,7 +11,6 @@ from . import BCHTStorageBase
 # Set attribute: backend.setattr(key, value)
 # Get attrioute: backend.getattr(key)
 
-@enforced
 def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
     """Parse the list of hashes of current blocks 
     stored in the database into tuple.
@@ -41,7 +38,6 @@ def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
     raise NotImplementedError
 
 
-@enforced
 def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
     """Appends a new hash into the list of current blocks
 
@@ -62,7 +58,6 @@ def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
     raise NotImplementedError
 
 
-@enforced
 def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
     """Get a list of current blocks
 
@@ -87,7 +82,6 @@ def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
     raise NotImplementedError
 
 
-@enforced
 def import_block(backend: BCHTStorageBase, block: BCHTBlock):
     """Import a block into the BCHT Database
 

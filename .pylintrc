@@ -1,2 +1,2 @@
-[MASTER]
-ignore=tests
+#[MASTER]
+#ignore=tests

@@ -2,7 +2,6 @@
 # Stores everything in LevelDB
 
 import typing
-from type_enforced import Enforcer as enforced
 from plyvel import DB as LDB
 
 from .meta import BCHTStorageBase
@@ -40,7 +39,6 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         """
         return cls(LDB(*args, **kwargs))
 
-    @enforced
     def put(self, block_data: BCHTBlock):
         """Put the given block into the database.
 
@@ -59,7 +57,6 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         block_data = block_data.raw
         self.db_block.put(block_hash, block_data)
 
-    @enforced
     def get(self, block_hash: bytes) -> BCHTBlock:
         """Retrieve a block in the chain by its hash.
 
@@ -91,7 +88,6 @@ class BCHTLevelDBStorage(BCHTStorageBase):
             raise KeyError(f"{block_hash} not found in the database.")
         return BCHTBlock.from_raw(get_result)
 
-    @enforced
     def delete(self, block_hash: bytes):
         """Delete a block in the chain by its hash.
 
@@ -139,7 +135,6 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         for key, value in self.db_block:
             yield key, BCHTBlock.from_raw(value)
 
-    @enforced
     def getattr(self, attr_name: bytes) -> bytes:
         """Retrieve an attibute from the database
 
@@ -168,7 +163,6 @@ class BCHTLevelDBStorage(BCHTStorageBase):
             raise KeyError(f"{attr_name} not found in the database.")
         return rtn
 
-    @enforced
     def setattr(self, attr_name: bytes, content: bytes):
         """Set an attibute into the database
 
@@ -189,7 +183,6 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         self.db_attr.put(attr_name, content)
 
-    @enforced
     def delattr(self, attr_name: bytes):
         """Delete an attibute from the database
 
