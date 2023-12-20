@@ -1,15 +1,18 @@
 # bchosttrust/bchosttrust/storage/meta.py
-# Base Classes of storage backends
+# Abstract Base Class (ABC) for storage backends
 
 # pylint: disable=unused-argument
 
 import typing
+from abc import abstractmethod, ABCMeta
+
 from ..internal import BCHTBlock
 
 
-class BCHTStorageBase:
+class BCHTStorageBase(metaclass=ABCMeta):
     """Base class of storage backends"""
 
+    @abstractmethod
     def get(self, block_hash: bytes) -> BCHTBlock:
         """Retrieve a block in the chain by its hash.
 
@@ -31,6 +34,7 @@ class BCHTStorageBase:
             If block_hash is not a valid SHA3-256 hexadecimal hash.
         """
 
+    @abstractmethod
     def put(self, block_data: BCHTBlock):
         """Put the given block into the database.
 
@@ -40,6 +44,7 @@ class BCHTStorageBase:
             The BCHTBlock object to be stored.
         """
 
+    @abstractmethod
     def delete(self, block_hash: bytes):
         """Delete a block in the chain by its hash.
 
@@ -56,6 +61,7 @@ class BCHTStorageBase:
             If block_hash is not a valid SHA3-256 hexadecimal hash.
         """
 
+    @abstractmethod
     def iter_blocks(self) -> typing.Generator[BCHTBlock, None, None]:
         """Return a iterable returning of BCHT Blocks, unordered.
 
@@ -65,6 +71,7 @@ class BCHTStorageBase:
             BCHT Blocks
         """
 
+    @abstractmethod
     def iter_blocks_with_key(self) -> typing.Generator[tuple[bytes, BCHTBlock], None, None]:
         """Return a iterable returning of BCHT Blocks, unordered, with keys.
 
@@ -74,6 +81,7 @@ class BCHTStorageBase:
             hash as keys, BCHT Blocks as values.
         """
 
+    @abstractmethod
     def getattr(self, attr_name: bytes) -> bytes:
         """Retrieve an attibute from the database
 
@@ -95,6 +103,7 @@ class BCHTStorageBase:
             If the key is not bytes, or if not accepted by the backend.
         """
 
+    @abstractmethod
     def setattr(self, attr_name: bytes, content: bytes):
         """Set an attibute into the database
 
@@ -111,6 +120,7 @@ class BCHTStorageBase:
             If the data or key is not bytes, or if not accepted by the backend.
         """
 
+    @abstractmethod
     def delattr(self, attr_name: bytes):
         """Delete an attibute from the database
 
@@ -127,10 +137,12 @@ class BCHTStorageBase:
             If the key is not bytes, or if not accepted by the backend.
         """
 
+    @abstractmethod
     def close(self):
         """Close the database."""
 
     @property
+    @abstractmethod
     def closed(self) -> bool:
         """Indicates whether the database is closed, i.e. not avaliable.
 
