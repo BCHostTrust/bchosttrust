@@ -6,7 +6,7 @@ import unittest
 from bchosttrust import BCHTBlock, BCHTEntry
 from bchosttrust.storage import BCHTDummyStorage
 from bchosttrust import attitudes
-from bchosttrust import tree
+from bchosttrust.analysis import tree
 
 
 class BCHTTreeTestCase(unittest.TestCase):

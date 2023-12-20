@@ -6,7 +6,7 @@ import unittest
 from bchosttrust import BCHTBlock, BCHTEntry
 from bchosttrust.storage import BCHTDummyStorage
 from bchosttrust import attitudes
-from bchosttrust import search
+from bchosttrust.analysis import search
 
 
 class BCHTSearchTestCase(unittest.TestCase):
