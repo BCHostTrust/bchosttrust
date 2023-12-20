@@ -56,7 +56,7 @@ def attempt(
         creation_time: int,
         entries: tuple[BCHTEntry],
         maximum_tries: int = BCHTBlock.MAX_NONCE,
-        powf: typing.Callable = validate_hash) -> (typing.Union[BCHTBlock, None], int):
+        powf: typing.Callable = validate_hash) -> tuple[typing.Union[BCHTBlock, None], int]:
     """Attempt the proof-of-work by accuminating nonces
 
     Parameters
