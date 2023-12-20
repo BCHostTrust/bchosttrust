@@ -119,3 +119,7 @@ class BCHTImportBlockTestCase(unittest.TestCase):
             self.blocks[2].hash,
             new_block.hash
         ))
+
+
+if __name__ == '__main__':
+    unittest.main()
