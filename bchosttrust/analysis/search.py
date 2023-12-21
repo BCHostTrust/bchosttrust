@@ -1,4 +1,4 @@
-# bchosttrust/bchosttrust/search.py
+# bchosttrust/bchosttrust/analysis/search.py
 # Perform down-to-top searching on the BCHT chain
 
 from collections import defaultdict
