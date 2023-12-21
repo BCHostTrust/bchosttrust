@@ -12,8 +12,8 @@ from ..consensus.powc import attempt
 @click.command("create")
 @click.argument('input', type=click.File('rb'))
 @click.argument('output', type=click.File('wb'))
-@click.pass_obj
-def cli(obj, input, output):
+@click.pass_context
+def cli(ctx, input, output):
     """Create a BCHT block from data supplied by the file.
     Output the raw block data to the `output`.
 
@@ -31,7 +31,7 @@ def cli(obj, input, output):
     # to get a proper nonce.
     # Finally, import the block into the database and write it to `output`.
 
-    storage = obj["storage"]
+    storage = ctx.obj["storage"]
 
     # Remove the following line before start wriiting your code.
     raise NotImplementedError

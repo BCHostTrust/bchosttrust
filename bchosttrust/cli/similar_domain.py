@@ -26,11 +26,11 @@ from ..analysis import get_last_block_hash, search, horizontal
               type=click.Choice(("json", "user"), case_sensitive=False),
               default="user")
 @click.argument('domain_name', type=str)
-@click.pass_obj
-def cli(obj, threshold_similar, threshold_sus, threshold_bad, safe, output_format, domain_name):
+@click.pass_context
+def cli(ctx, threshold_similar, threshold_sus, threshold_bad, safe, output_format, domain_name):
     """Get similiar domains"""
 
-    storage = obj["storage"]
+    storage = ctx.obj["storage"]
     last_block_hash = get_last_block_hash(storage, safe)
 
     website_ratings = search.get_website_rating(storage, last_block_hash)

@@ -10,8 +10,8 @@ from ..storage import import_block
 
 @click.command("import")
 @click.argument('input', type=click.File('rb'))
-@click.pass_obj
-def cli(obj, input):
+@click.pass_context
+def cli(ctx, input):
     """Imports a BCHT block into the blockchain database."""
 
     # `input` is a file opened in byte read mode.
@@ -22,7 +22,7 @@ def cli(obj, input):
     # Remember to use echo(...) instead of print(...) to return anything
     # to the user. Use echo(..., err=True) to report an error.
 
-    storage = obj["storage"]
+    storage = ctx.obj["storage"]
 
     # Remove the following line before start wriiting your code.
     raise NotImplementedError

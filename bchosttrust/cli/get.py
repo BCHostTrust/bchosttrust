@@ -13,16 +13,17 @@ from ..utils import HashParamType
               type=click.Choice(("raw", "user"), case_sensitive=False),
               default="user")
 @click.argument('block_hash', type=HashParamType())
-@click.pass_obj
-def cli(obj, output_format, block_hash):
+@click.pass_context
+def cli(ctx, output_format, block_hash):
     """Get a block by its SHA3-256 hash."""
 
-    storage = obj["storage"]
+    storage = ctx.obj["storage"]
 
     try:
         block = storage.get(block_hash)
     except KeyError:
         echo("Failed to obtain block (not found)", err=True)
+
         return
     except ValueError:  # This should not happen, HashParamType should have handled this
         echo("Failed to obtain block (invalid hash)", err=True)
