@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/consensus/limitations.py
-# Power-unrelated limitations to BCHT blocks
+"""Power-unrelated limitations to BCHT blocks"""
 
 from collections import Counter
 

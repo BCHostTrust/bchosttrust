@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/utils.py
-# Utilities used internally
+"""Utilities used internally"""
 
 from platform import system
 from pathlib import Path

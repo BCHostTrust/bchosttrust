@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/cli/get.py
-# Implements the retrieval of block from the database.
+"""Implements the retrieval of block from the database."""
 
 from time import strftime
 import click

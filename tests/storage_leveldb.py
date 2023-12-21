@@ -2,6 +2,8 @@
 # Test bchosttrust.storage.BCHTLevelDBStorage
 # canonical: bchosttrust.storage.leveldb.BCHTLevelDBStorage
 
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
 import unittest
 import tempfile
 from os import path

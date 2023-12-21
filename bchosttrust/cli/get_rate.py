@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/cli/get_rate.py
-# Get the rating of a domain name
+"""Get the rating of a domain name"""
 
 import click
 from click import echo

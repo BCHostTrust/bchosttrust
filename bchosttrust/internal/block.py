@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/internal/block.py
-# BCHostTrust Blockchain Structure
+"""BCHostTrust Blockchain Structure"""
 
 import struct
 import typing

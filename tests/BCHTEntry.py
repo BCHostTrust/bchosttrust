@@ -2,6 +2,8 @@
 # Test bchosttrust.BCHTEntry
 # canonical: bchosttrust.internal.block.BCHTEntry
 
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
 import unittest
 from bchosttrust import BCHTEntry
 

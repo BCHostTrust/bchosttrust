@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/attitudes.py
-# Constants of the meanings of attitudes
+"""Constants of the meanings of attitudes"""
 
 from collections import defaultdict
 

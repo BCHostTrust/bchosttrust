@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/consensus/powc.py
-# Handle proof-of-work concensus
+"""Handle proof-of-work concensus"""
 
 import typing
 

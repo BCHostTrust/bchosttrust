@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/cli/import_block.py
-# Import blocks from a file or standard input
+"""Import blocks from a file or standard input"""
 
 import click
 from click import echo

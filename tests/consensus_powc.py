@@ -1,6 +1,8 @@
 # bchosttrust/tests/consensus_powc.py
 # Test bchosttrust.consensus.powc
 
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
 import unittest
 from bchosttrust.consensus import powc
 from bchosttrust import BCHTEntry

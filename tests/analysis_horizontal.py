@@ -1,6 +1,8 @@
 # bchosttrust/tests/analysis_horizontal.py
 # test bchosttrust.analysis.horizontal
 
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
 import unittest
 
 from bchosttrust.analysis import horizontal

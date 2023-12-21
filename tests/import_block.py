@@ -3,6 +3,8 @@
 # This are supposed to fail if bchosttrust/bchosttrust/storage/import_block.py
 # Were written improperly.
 
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
 import unittest
 
 from bchosttrust import BCHTBlock, BCHTEntry

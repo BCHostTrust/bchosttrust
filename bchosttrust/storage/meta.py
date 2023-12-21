@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/storage/meta.py
-# Abstract Base Class (ABC) for storage backends
+"""Abstract Base Class (ABC) for storage backends"""
 
 # pylint: disable=unused-argument
 

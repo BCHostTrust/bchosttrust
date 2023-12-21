@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/storage/leveldb.py
-# Stores everything in LevelDB
+"""Stores everything in LevelDB"""
 
 import typing
 from plyvel import DB as LDB

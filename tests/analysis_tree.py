@@ -1,6 +1,8 @@
 # bchosttrust/tests/analysis_tree.py
 # test bchosttrust.analysis.tree
 
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
 import unittest
 
 from bchosttrust import BCHTBlock, BCHTEntry

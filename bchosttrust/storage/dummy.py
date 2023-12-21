@@ -1,7 +1,7 @@
 # bchosttrust/bchosttrust/storage/dummy.py
-# Stores everythin on RAM, vanishes as the program exits
-# WARNING: This is not suitable for command-line tests!
-#          Use LevelDB in a temporary directory instead.
+"""Stores everythin on RAM, vanishes as the program exits
+WARNING: This is not suitable for command-line tests! 
+         Use LevelDB in a temporary directory instead."""
 
 import typing
 

@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/cli/create.py
-# Create block from file input
+"""Create block from file input"""
 
 import click
 from click import echo

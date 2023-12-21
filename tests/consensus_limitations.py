@@ -1,6 +1,8 @@
 # bchosttrust/tests/consensus_limitations.py
 # Test bchosttrust.consensus.limitations
 
+# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+
 import unittest
 
 from bchosttrust.consensus import limitations
