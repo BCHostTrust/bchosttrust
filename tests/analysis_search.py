@@ -1,5 +1,5 @@
-# bchosttrust/tests/search.py
-# test bchosttrust.search
+# bchosttrust/tests/analysis_search.py
+# test bchosttrust.analysis.search
 
 import unittest
 

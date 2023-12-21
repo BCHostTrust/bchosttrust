@@ -13,10 +13,13 @@ def _similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 
+DEFAULT_MIN_RATIO = 0.7
+
+
 def iter_simular_names(
         from_name: str,
         list_names: typing.Iterable[str],
-        min_ratio: float = 0.6) -> typing.Generator[str, None, None]:
+        min_ratio: float = DEFAULT_MIN_RATIO) -> typing.Generator[str, None, None]:
     """Yields simular strings when comparing from_name again list_names.
 
     Parameters
@@ -44,7 +47,7 @@ def iter_simular_names(
 def get_simular_names(
         from_name: str,
         list_names: typing.Iterable[str],
-        min_ratio: float = 0.6) -> tuple[str]:
+        min_ratio: float = DEFAULT_MIN_RATIO) -> tuple[str]:
     """Get a tuple of simular strings when comparing from_name again list_names.
 
     Parameters
@@ -80,7 +83,7 @@ class ThresholdDict(typing.TypedDict):
 def analyse_domain_name(
         from_name: str,
         ratings: dict[str, int],
-        min_ratio: float = 0.6,
+        min_ratio: float = DEFAULT_MIN_RATIO,
         sus_threshold: int = DEFAULT_SUS,
         bad_threshold: int = DEFAULT_BAD) -> dict[Literal["HIGH", "LOW"],
                                                   dict[Literal["SUS", "BAD"], set[str]]]:

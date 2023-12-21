@@ -1,5 +1,5 @@
-# bchosttrust/tests/tree.py
-# test bchosttrust.tree
+# bchosttrust/tests/analysis_tree.py
+# test bchosttrust.analysis.tree
 
 import unittest
 

@@ -5,7 +5,7 @@ from ..internal import BCHTBlock
 from ..storage import BCHTStorageBase
 from ..storage.import_block import parse_curr_hashes
 
-__all__ = ("search", "tree")
+__all__ = ("search", "tree", "horizontal")
 
 
 def get_last_block_hash(backend: BCHTStorageBase, safe: bool = True) -> bytes:
