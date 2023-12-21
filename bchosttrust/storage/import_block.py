@@ -34,8 +34,11 @@ def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
     #    Example: https://stackoverflow.com/a/20024864
     # 3. Return the sliced bytes in tuple
 
-    # Remove the following line before start working
-    raise NotImplementedError
+    try:
+        curr_hashes = backend.getattr(b"curr_hashes")
+    except KeyError:
+        return tuple()
+    return tuple(curr_hashes[i:i+32] for i in range(0, len(curr_hashes), 32))
 
 
 def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
@@ -54,8 +57,12 @@ def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
     # 2. Append new_hash into `curr_hashes`
     # 3. Set the new curr_hashes into the attribute database
 
-    # Remove the following line before start working
-    raise NotImplementedError
+    try:
+        curr_hashes = backend.getattr(b"curr_hashes")
+    except KeyError:
+        curr_hashes = b""
+    curr_hashes += new_hash
+    backend.setattr(b"curr_hashes", curr_hashes)
 
 
 def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
@@ -78,8 +85,8 @@ def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
     # 3. Put them into a tuple and then return it
     # (2 and 3 can be done in a single line using inline generators)
 
-    # Remove the following line before start working
-    raise NotImplementedError
+    hashes = parse_curr_hashes(backend)
+    return tuple(backend.get(h) for h in hashes)
 
 
 def import_block(backend: BCHTStorageBase, block: BCHTBlock):
@@ -116,5 +123,15 @@ def import_block(backend: BCHTStorageBase, block: BCHTBlock):
     #      in the attribute database with this block's `prev_hash`, and replace
     #      `curr_hashes` in the attribute database with this block's hash.
 
-    # Remove the following line before start working
-    raise NotImplementedError
+    prev_block = backend.get(block.prev_hash)
+    if prev_block.creation_time > block.creation_time:
+        raise ValueError("Block is earlier than the previous block")
+    if not validate(block):
+        raise ValueError("Block validation failed")
+    backend.put(block)
+    prev_hash = backend.getattr(b"prev_hash")
+    if block.prev_hash == prev_hash:
+        add_hash_to_current(backend, block.hash)
+    elif block.prev_hash in parse_curr_hashes(backend):
+        backend.setattr(b"prev_hash", block.prev_hash)
+        backend.setattr(b"curr_hashes", block.hash)

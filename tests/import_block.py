@@ -89,7 +89,7 @@ class BCHTImportBlockTestCase(unittest.TestCase):
 
         self.assertEqual(self.db.getattr(b"prev_hash"), self.blocks[1].hash)
         self.assertEqual(import_block.parse_curr_hashes(self.db),
-                         (new_block.hash))
+                         (new_block.hash, ))
 
     def test_import_block_fork(self):
         # We build a block on top of blocks[0]
