@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/analysis/__init__.py
-# Handle Analysis
+"""Handle Analysis"""
 
 from ..internal import BCHTBlock
 from ..storage import BCHTStorageBase

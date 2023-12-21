@@ -8,4 +8,5 @@ __all__ = (
     "import_block",  # Command: import
     "create",
     "get_rate",
+    "similar_domain"
 )

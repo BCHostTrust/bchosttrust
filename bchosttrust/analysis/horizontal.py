@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/analysis/horizontal.py
-# Perform horizontal compare
+"""Perform horizontal compare"""
 
 import typing
 from typing import Literal
@@ -94,7 +94,7 @@ def analyse_domain_name(
     from_name : str
         The domain checking against other domains
     ratings : dict[str, int]
-        Return value of get_website_rating, including from_name
+        Return value of search.get_website_rating, including from_name
     min_ratio : float
         The minimum value returned by SequenceMatcher().ratio(), by default 0.6
     sus_threshold : int

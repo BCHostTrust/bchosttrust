@@ -1,5 +1,5 @@
 # bchosttrust/bchosttrust/analysis/tree.py
-# Perform top-to-down searching on the BCHT chain
+"""Perform top-to-down searching on the BCHT chain"""
 
 from typing import Iterable
 from anytree import Node

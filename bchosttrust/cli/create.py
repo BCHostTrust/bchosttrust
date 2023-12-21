@@ -12,8 +12,8 @@ from ..consensus.powc import attempt
 @click.command("create")
 @click.argument('input', type=click.File('rb'))
 @click.argument('output', type=click.File('wb'))
-@click.pass_context
-def cli(ctx, input, output):
+@click.pass_obj
+def cli(obj, input, output):
     """Create a BCHT block from data supplied by the file.
     Output the raw block data to the `output`.
 
@@ -30,3 +30,8 @@ def cli(ctx, input, output):
     # After that, Pass the parameters into bchosttrust.consensus.powc.attempt
     # to get a proper nonce.
     # Finally, import the block into the database and write it to `output`.
+
+    storage = obj["storage"]
+
+    # Remove the following line before start wriiting your code.
+    raise NotImplementedError

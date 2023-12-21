@@ -13,11 +13,11 @@ from ..utils import HashParamType
               type=click.Choice(("raw", "user"), case_sensitive=False),
               default="user")
 @click.argument('block_hash', type=HashParamType())
-@click.pass_context
-def cli(ctx, output_format, block_hash):
+@click.pass_obj
+def cli(obj, output_format, block_hash):
     """Get a block by its SHA3-256 hash."""
 
-    storage = ctx.storage
+    storage = obj["storage"]
 
     try:
         block = storage.get(block_hash)
