@@ -45,7 +45,6 @@ def generate_tree(block_list: Iterable[BCHTBlock], from_block: bytes) -> Node:
     """
 
     root = Node(from_block)
-    # TODO: Handle recursive (which should not but may happen)
     for child in get_child(block_list, from_block):
         child_block = generate_tree(block_list, child.hash)
         child_block.parent = root
