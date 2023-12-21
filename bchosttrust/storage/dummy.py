@@ -17,6 +17,9 @@ class BCHTDummyStorage(BCHTStorageBase):
         self.attr_db = {}
         self._closed = False
 
+    def __str__(self):
+        return "<BCHTDummyStorage>"
+
     def get(self, block_hash: bytes) -> BCHTBlock:
         """Retrieve a block in the chain by its hash.
 

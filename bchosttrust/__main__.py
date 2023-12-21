@@ -21,9 +21,14 @@ def cli(ctx):
 
 
 @cli.command("version")
-def version():
+@click.pass_context
+def version(ctx):
     """Display the version of this program"""
+
+    storage = ctx.obj["storage"]
+
     click.echo(f"BCHostTrust Reference Implementation, version {__version__}")
+    click.echo(f"Using storage backend {storage.__str__()}")
 
 
 # Registers all commands into the main script.

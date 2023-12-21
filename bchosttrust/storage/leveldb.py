@@ -25,6 +25,9 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         self.db_block = db.prefixed_db(b'block-')
         self.db_attr = db.prefixed_db(b'attr-')
 
+    def __str__(self):
+        return f"<BCHTLevelDBStorage, db={self.db.__str__()}>"
+
     @classmethod
     def init_db(cls, *args, **kwargs) -> typing.Self:
         """Create a BCHT LevelDB Storage backend with parameters 
