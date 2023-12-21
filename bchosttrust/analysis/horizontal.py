@@ -61,6 +61,7 @@ def get_simular_names(
     tuple[str]
         A tuple of similar strings, not including itself
     """
+
     return tuple(iter_simular_names(from_name, list_names, min_ratio))
 
 
@@ -115,6 +116,7 @@ def analyse_domain_name(
             }
         }
     """
+
     compare_results = {
         "HIGHER": {
             "SUS": set(),
