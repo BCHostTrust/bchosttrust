@@ -15,7 +15,6 @@ def cli(ctx):
     """BCHostTrust Command-line Script"""
 
     # get the default storage backend
-    # TODO: Allow the user to configure this
     ctx.obj = {
         "storage": get_default_storage()
     }
