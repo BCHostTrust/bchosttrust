@@ -4,7 +4,6 @@
 #          Use LevelDB in a temporary directory instead.
 
 import typing
-from type_enforced import Enforcer as enforced
 
 from .meta import BCHTStorageBase
 from .. import BCHTBlock
@@ -18,7 +17,6 @@ class BCHTDummyStorage(BCHTStorageBase):
         self.attr_db = {}
         self._closed = False
 
-    @enforced
     def get(self, block_hash: bytes) -> BCHTBlock:
         """Retrieve a block in the chain by its hash.
 
@@ -47,7 +45,6 @@ class BCHTDummyStorage(BCHTStorageBase):
                 f"{block_hash} is not a valid SHA3-512 hexadecimal hash.")
         return self.db[block_hash]  # raise KeyError if not found
 
-    @enforced
     def put(self, block_data: BCHTBlock):
         """Put the given block into the database.
 
@@ -62,7 +59,6 @@ class BCHTDummyStorage(BCHTStorageBase):
         block_hash = block_data.hash
         self.db[block_hash] = block_data
 
-    @enforced
     def delete(self, block_hash: bytes):
         """Delete a block in the chain by its hash.
 
@@ -110,7 +106,6 @@ class BCHTDummyStorage(BCHTStorageBase):
         for key, value in self.db.items():
             yield key, value
 
-    @enforced
     def getattr(self, attr_name: bytes) -> bytes:
         """Retrieve an attibute from the database
 
@@ -136,7 +131,6 @@ class BCHTDummyStorage(BCHTStorageBase):
             raise RuntimeError("Database is closed.")
         return self.attr_db[attr_name]  # raise KeyError if not found
 
-    @enforced
     def setattr(self, attr_name: bytes, content: bytes):
         """Set an attibute into the database
 
@@ -157,7 +151,6 @@ class BCHTDummyStorage(BCHTStorageBase):
             raise RuntimeError("Database is closed.")
         self.attr_db[attr_name] = content
 
-    @enforced
     def delattr(self, attr_name: bytes):
         """Delete an attibute from the database
 
