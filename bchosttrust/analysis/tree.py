@@ -38,7 +38,7 @@ def generate_tree(block_list: Iterable[BCHTBlock], from_block: bytes) -> Node:
 
     Returns
     -------
-    tuple[anytree.Node]
+    anytree.Node
         The Node object of the root. The name attibute of it is the hash.
         See https://anytree.readthedocs.io/en/stable/api/anytree.node.html#anytree.node.node.Node
         for more usages.
