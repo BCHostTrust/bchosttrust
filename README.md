@@ -17,9 +17,9 @@ pipx install bchosttrust
 
 After that, you can run the following command to verify if the installation is working properly:
 
-```bash
-bcht version
-# BCHostTrust Reference Implementation, version 0.0.0
+```console
+$ bcht version
+BCHostTrust Reference Implementation, version 0.0.0
 ```
 
 ### Via pip (recommended for application developers)
