@@ -1,11 +1,16 @@
 # bchosttrust/bchosttrust/analysis/__init__.py
 """Handle Analysis"""
 
+from importlib import import_module
+
 from ..internal import BCHTBlock
 from ..storage import BCHTStorageBase
 from ..storage.import_block import parse_curr_hashes
 
 __all__ = ("search", "tree", "horizontal")
+
+for mod in __all__:
+    mod = import_module(f".{mod}", package=__name__)
 
 
 def get_last_block_hash(backend: BCHTStorageBase, safe: bool = True) -> bytes:

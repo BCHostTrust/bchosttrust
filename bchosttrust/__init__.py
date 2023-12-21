@@ -14,4 +14,9 @@ __all__ = (
     "utils"
 )
 
+from importlib import import_module
+
 from .internal import BCHTBlock, BCHTEntry
+
+for mod in __all__:
+    mod = import_module(f".{mod}", package=__name__)

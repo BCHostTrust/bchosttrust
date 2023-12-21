@@ -10,3 +10,8 @@ __all__ = (
     "get_rate",
     "similar_domain"
 )
+
+from importlib import import_module
+
+for mod in __all__:
+    mod = import_module(f".{mod}", package=__name__)

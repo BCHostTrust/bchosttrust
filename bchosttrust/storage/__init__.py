@@ -4,11 +4,15 @@
 __all__ = ("leveldb", "meta", "dummy")
 
 import os
+from importlib import import_module
 
 from .meta import BCHTStorageBase
 from .leveldb import BCHTLevelDBStorage
 from .dummy import BCHTDummyStorage
 from ..utils import get_data_path
+
+for mod in __all__:
+    mod = import_module(f".{mod}", package=__name__)
 
 
 def get_default_storage() -> BCHTStorageBase:

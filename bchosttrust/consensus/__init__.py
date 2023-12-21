@@ -3,9 +3,14 @@
 
 __all__ = ("powc", "limitations")
 
+from importlib import import_module
+
 from bchosttrust.internal.block import BCHTBlock
 from .powc import validate_block_hash
 from .limitations import validate_block_limitations
+
+for mod in __all__:
+    mod = import_module(f".{mod}", package=__name__)
 
 
 def validate(block: BCHTBlock) -> bool:
