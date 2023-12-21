@@ -4,7 +4,7 @@
 import click
 from click import echo
 
-from .. import search
+from ..analysis import search
 
 
 @click.command("get_rate")
