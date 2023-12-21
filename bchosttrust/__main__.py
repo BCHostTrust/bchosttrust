@@ -1,8 +1,6 @@
 # bchosttrust/bchosttrust/__main__.py
 """Handle python3 -m bchosttrust and direct command"""
 
-# pylint: disable=missing-function-docstring
-
 import importlib
 import click
 
@@ -25,6 +23,7 @@ def cli(ctx):
 
 @cli.command("version")
 def version():
+    """Display the version of this program"""
     click.echo(f"BCHostTrust Reference Implementation, version {__version__}")
 
 
