@@ -1,9 +1,12 @@
 # bchosttrust/bchosttrust/__main__.py
 """Handle python3 -m bchosttrust and direct command"""
 
+# pylint: disable=missing-function-docstring
+
 import importlib
 import click
 
+from . import __version__
 from .cli import __all__ as list_clis
 from .storage import get_default_storage
 
@@ -18,6 +21,11 @@ def cli(ctx):
     ctx.obj = {
         "storage": get_default_storage()
     }
+
+
+@cli.command("version")
+def version():
+    click.echo(f"BCHostTrust Reference Implementation, version {__version__}")
 
 
 # Registers all commands into the main script.
