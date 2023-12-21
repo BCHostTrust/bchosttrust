@@ -50,7 +50,7 @@ def validate_block_hash(block: BCHTBlock) -> bool:
     return validate_hash(block.hash)
 
 
-def attempt(
+def attempt(  # pylint: disable=too-many-arguments
         version: int,
         prev_hash: bytes,
         creation_time: int,
@@ -90,7 +90,7 @@ def attempt(
     if maximum_tries > BCHTBlock.MAX_NONCE:
         raise ValueError(
             f"maximum_tries must not exceed {BCHTBlock.MAX_NONCE}")
-    for nonce in range(0, maximum_tries):  # TODO: parallelization
+    for nonce in range(0, maximum_tries):
         block = BCHTBlock(version, prev_hash, creation_time, nonce, entries)
         if powf(block.hash):
             return block, nonce

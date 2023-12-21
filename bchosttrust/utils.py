@@ -76,12 +76,12 @@ def get_cache_path() -> os.PathLike:
     return cache_dir
 
 
-class HashParamType(click.ParamType):
+class HashParamType(click.ParamType):  # pylint: disable=too-few-public-methods
     """click.ParamType accepting a SHA3-256 hash, optionally prefixed with 0x."""
 
     name = "sha3-256 hash in in hex form"
 
-    def convert(self, value, param, ctx):
+    def convert(self, value, param, ctx):  # pylint: disable=unused-argument, missing-function-docstring, inconsistent-return-statements
         if isinstance(value, str):
             if value[0:2].lower() == "0x":
                 value = value[2:]

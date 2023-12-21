@@ -8,7 +8,8 @@ from ..analysis import get_last_block_hash, search
 
 
 @click.command("get-rate")
-@click.option("--safe/--no-safe", default=True, help="Whether to skip the current blocks (i.e. no blocks behind it)")
+@click.option("--safe/--no-safe", default=True,
+              help="Whether to skip the current blocks (i.e. no blocks behind it)")
 @click.argument('domain_name', type=str)
 @click.pass_context
 def cli(ctx, safe, domain_name):

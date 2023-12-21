@@ -9,9 +9,9 @@ from ..storage import import_block
 
 
 @click.command("import")
-@click.argument('input', type=click.File('rb'))
+@click.argument('input_file', type=click.File('rb'))
 @click.pass_context
-def cli(ctx, input):
+def cli(ctx, input_file):
     """Imports a BCHT block into the blockchain database."""
 
     # `input` is a file opened in byte read mode.

@@ -10,10 +10,10 @@ from ..consensus.powc import attempt
 
 
 @click.command("create")
-@click.argument('input', type=click.File('rb'))
-@click.argument('output', type=click.File('wb'))
+@click.argument('input_file', type=click.File('rb'))
+@click.argument('output_file', type=click.File('wb'))
 @click.pass_context
-def cli(ctx, input, output):
+def cli(ctx, input_file, output_file):
     """Create a BCHT block from data supplied by the file.
     Output the raw block data to the `output`.
 

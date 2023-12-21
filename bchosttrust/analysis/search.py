@@ -45,7 +45,9 @@ def iter_from_block(backend: BCHTStorageBase, bhash: bytes) -> Generator[BCHTBlo
         yield block
 
 
-def get_website_votes(backend: BCHTStorageBase, bhash: bytes) -> defaultdict[str, defaultdict[int, int]]:
+def get_website_votes(
+        backend: BCHTStorageBase,
+        bhash: bytes) -> defaultdict[str, defaultdict[int, int]]:
     """Count the number of votes with different attitudes on websites
 
     Parameters

@@ -21,13 +21,20 @@ from ..analysis import get_last_block_hash, search, horizontal
               type=int,
               default=horizontal.DEFAULT_BAD,
               help="Threshold of bad neibours")
-@click.option("--safe/--no-safe", default=True, help="Whether to skip the current blocks (i.e. no blocks behind it)")
+@click.option("--safe/--no-safe", default=True,
+              help="Whether to skip the current blocks (i.e. no blocks behind it)")
 @click.option('-f', '--format', 'output_format',
               type=click.Choice(("json", "user"), case_sensitive=False),
               default="user")
 @click.argument('domain_name', type=str)
 @click.pass_context
-def cli(ctx, threshold_similar, threshold_sus, threshold_bad, safe, output_format, domain_name):
+def cli(ctx,  # pylint: disable=too-many-arguments
+        threshold_similar,
+        threshold_sus,
+        threshold_bad,
+        safe,
+        output_format,
+        domain_name):
     """Get similiar domains"""
 
     storage = ctx.obj["storage"]

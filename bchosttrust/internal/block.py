@@ -88,7 +88,27 @@ class BCHTEntry:
         return cls(domain_name, attitude)
 
     @classmethod
-    def iter_raw_chain(cls, raw_bytes_chain: bytes) -> typing.Generator[tuple[typing.Self], None, None]:
+    def iter_raw_chain(
+            cls,
+            raw_bytes_chain: bytes) -> typing.Generator[typing.Self, None, None]:
+        """Iterate through a raw chain of entries
+
+        Parameters
+        ----------
+        raw_bytes_chain : bytes
+            The raw chain of entries
+
+        Yields
+        ------
+        BCHTEntry
+            The entries on object form
+
+        Raises
+        ------
+        ValueError
+            If the length of raw bytes chain is invalid
+        """
+
         try:
             len_entries = len(raw_bytes_chain)
             pt = 0
@@ -107,6 +127,19 @@ class BCHTEntry:
 
     @classmethod
     def from_raw_chain(cls, raw_bytes_chain: bytes) -> tuple[typing.Self]:
+        """Convert a raw chain of entries into a tuple of objects
+
+        Parameters
+        ----------
+        raw_bytes_chain : bytes
+            The raw chain of entries
+
+        Returns
+        -------
+        tuple[typing.Self]
+            The tuple of BCHTEntry objects
+        """
+
         return tuple(cls.iter_raw_chain(raw_bytes_chain))
 
     @property
@@ -236,7 +269,11 @@ class BCHTBlock:
         nonce_bytes = struct.pack(">L", self.nonce)  # unsigned long
         entries_bytes = tuple(e.raw for e in self.entries)
 
-        return version_bytes + self.prev_hash + creation_time_bytes + nonce_bytes + b"".join(entries_bytes)
+        return b"".join((version_bytes,
+                        self.prev_hash,
+                        creation_time_bytes,
+                        nonce_bytes,
+                        b"".join(entries_bytes)))
 
     @property
     def hash(self) -> bytes:

@@ -28,7 +28,7 @@ def version(ctx):
     storage = ctx.obj["storage"]
 
     click.echo(f"BCHostTrust Reference Implementation, version {__version__}")
-    click.echo(f"Using storage backend {storage.__str__()}")
+    click.echo(f"Using storage backend {storage}")
 
 
 # Registers all commands into the main script.
