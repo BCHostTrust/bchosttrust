@@ -6,6 +6,8 @@ import typing
 from dataclasses import dataclass
 from hashlib import sha3_256
 
+from .. import exceptions
+
 
 @dataclass(frozen=True)
 class BCHTEntry:
@@ -29,8 +31,10 @@ class BCHTEntry:
 
     Raises
     ------
-    ValueError
-        If any of the values are invalid.
+    BCHTOutOfRangeError
+        Raised when the value or length of a parameter is out of range.
+    BCHTInvalidHostNameError
+        Raised when the value of a hostname is invalid.
     """
 
     MAX_DOMAIN_LENGTH = 4294967295  # Length within unsigned integer 32 bit
@@ -41,15 +45,17 @@ class BCHTEntry:
 
     def __post_init__(self):
         if not 0 <= self.attitude <= self.MAX_ATTITUDE:
-            raise ValueError("Attitude must be within the range of 0 to 255.")
+            raise exceptions.BCHTOutOfRangeError(
+                "Attitude must be within the range of 0 to 255.")
         try:
             domain_name_bytes = self.domain_name.encode("ascii")
         except UnicodeEncodeError as e:
-            raise ValueError("Domain name must only contain ASCII charactor. "
-                             "If non-ASCII charactors exists, "
-                             "escape them with IDNA encoding first.") from e
+            raise exceptions.BCHTInvalidHostNameError(
+                "Domain name must only contain ASCII charactor. "
+                "If non-ASCII charactors exists, "
+                "escape them with IDNA encoding first.") from e
         if len(domain_name_bytes) > self.MAX_DOMAIN_LENGTH:
-            raise ValueError(
+            raise exceptions.BCHTOutOfRangeError(
                 "Length of domain name must not exceed 4294967295.")
 
     @classmethod
@@ -68,19 +74,20 @@ class BCHTEntry:
 
         Raises
         ------
-        ValueError
+        BCHTInvalidEntryError
             If the length of the BCHT Entry is invalid
         """
 
         raw_bytes_len = len(raw_bytes)
         if raw_bytes_len < 5:
-            raise ValueError("Length of BCHT Entry must be at least 5 bytes.")
+            raise exceptions.BCHTInvalidEntryError(
+                "Length of BCHT Entry must be at least 5 bytes.")
 
         attitude = raw_bytes[0]
         domain_name_len = int.from_bytes(raw_bytes[1:5])
 
         if (5 + domain_name_len) != raw_bytes_len:
-            raise ValueError(
+            raise exceptions.BCHTInvalidEntryError(
                 "Length of BCHT Entry does not match the one in its header")
         domain_name_bytes = raw_bytes[5:(5 + domain_name_len)]
         domain_name = domain_name_bytes.decode("ascii")
@@ -105,7 +112,7 @@ class BCHTEntry:
 
         Raises
         ------
-        ValueError
+        BCHTInvalidEntryError
             If the length of raw bytes chain is invalid
         """
 
@@ -123,7 +130,8 @@ class BCHTEntry:
                 pt += 5 + len_domain
                 yield BCHTEntry.from_raw(raw_bytes)
         except IndexError as e:
-            raise ValueError("Invalid length of raw bytes chain") from e
+            raise exceptions.BCHTInvalidEntryError(
+                "Invalid length of raw bytes chain") from e
 
     @classmethod
     def from_raw_chain(cls, raw_bytes_chain: bytes) -> tuple[typing.Self]:
@@ -138,6 +146,11 @@ class BCHTEntry:
         -------
         tuple[typing.Self]
             The tuple of BCHTEntry objects
+
+        Raises
+        ------
+        BCHTInvalidEntryError
+            If the length of raw bytes chain is invalid
         """
 
         return tuple(cls.iter_raw_chain(raw_bytes_chain))
@@ -189,8 +202,10 @@ class BCHTBlock:
 
     Raises
     ------
-    ValueError
-        If any of the values are invalid.
+    BCHTOutOfRangeError
+        Raised when the value or length of a parameter is out of range.
+    TypeError
+        When the type of parameters are not correct
     """
 
     MAX_VERSION = 65535
@@ -205,20 +220,22 @@ class BCHTBlock:
 
     def __post_init__(self):
         if self.version > self.MAX_VERSION:
-            raise ValueError("version must not exceed 65535")
+            raise exceptions.BCHTOutOfRangeError(
+                "version must not exceed 65535")
         if not isinstance(self.prev_hash, bytes):
-            raise ValueError("prev_hash must be bytes")
+            raise TypeError("prev_hash must be bytes")
         if len(self.prev_hash) != 32:
             raise ValueError("prev_hash must be 32 bytes long")
         if self.creation_time > self.MAX_TIME:
-            raise ValueError(
+            raise exceptions.BCHTOutOfRangeError(
                 "creation_time must not exceed 18446744073709551615")
         if self.nonce > self.MAX_NONCE:
-            raise ValueError("nonce must not exceed 4294967295")
+            raise exceptions.BCHTOutOfRangeError(
+                "nonce must not exceed 4294967295")
         if not isinstance(self.entries, tuple):
-            raise ValueError("entries must be a tuple")
+            raise TypeError("entries must be a tuple")
         if any(not isinstance(e, BCHTEntry) for e in self.entries):
-            raise ValueError("items in entries must be BCHTEntry objects")
+            raise TypeError("items in entries must be BCHTEntry objects")
 
     @classmethod
     def from_raw(cls, raw: bytes) -> typing.Self:
@@ -236,12 +253,12 @@ class BCHTBlock:
 
         Raises
         ------
-        ValueError
+        BCHTInvalidBlockError
             If the block (or entries) format is/are incorrect.
         """
 
         if len(raw) < 46:
-            raise ValueError(
+            raise exceptions.BCHTInvalidBlockError(
                 "BCHTBlock raw format must be longer than 46 bytes")
         version = int.from_bytes(raw[0:2])
         prev_hash = raw[2:34]

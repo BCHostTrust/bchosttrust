@@ -5,6 +5,7 @@ import typing
 from plyvel import DB as LDB
 
 from .meta import BCHTStorageBase
+from .. import exceptions
 from .. import BCHTBlock
 
 
@@ -52,13 +53,17 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         Raises
         ------
-        RuntimeError
+        BCHTDatabaseClosedError
             If the database was closed.
         """
 
         block_hash = block_data.hash
         block_data = block_data.raw
-        self.db_block.put(block_hash, block_data)
+        try:
+            self.db_block.put(block_hash, block_data)
+        except RuntimeError as e:
+            raise exceptions.BCHTDatabaseClosedError(
+                "LevelDB backend closed.") from e
 
     def get(self, block_hash: bytes) -> BCHTBlock:
         """Retrieve a block in the chain by its hash.
@@ -75,20 +80,25 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         Raises
         ------
-        KeyError
+        BCHTBlockNotFoundError
             If the block with the given hash is not found.
-        ValueError
+        BCHTInvalidHashError
             If block_hash is not a valid SHA3-256 hexadecimal hash.
-        RuntimeError
+        BCHTDatabaseClosedError
             If the database was closed.
         """
 
         if len(block_hash) != 32:
-            raise ValueError(
+            raise exceptions.BCHTInvalidHashError(
                 f"{block_hash} is not a valid SHA3-512 hexadecimal hash.")
-        get_result = self.db_block.get(block_hash)
+        try:
+            get_result = self.db_block.get(block_hash)
+        except RuntimeError as e:
+            raise exceptions.BCHTDatabaseClosedError(
+                "LevelDB backend closed.") from e
         if get_result is None:  # i.e. not found
-            raise KeyError(f"{block_hash} not found in the database.")
+            raise exceptions.BCHTBlockNotFoundError(
+                f"{block_hash} not found in the database.")
         return BCHTBlock.from_raw(get_result)
 
     def delete(self, block_hash: bytes):
@@ -101,18 +111,20 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         Raises
         ------
-        KeyError
-            If the block with the given hash is not found.
-        ValueError
+        BCHTInvalidHashError
             If block_hash is not a valid SHA3-256 hexadecimal hash.
-        RuntimeError
+        BCHTDatabaseClosedError
             If the database was closed.
         """
 
         if len(block_hash) != 32:
-            raise ValueError(
+            raise exceptions.BCHTInvalidHashError(
                 f"{block_hash} is not a valid SHA3-256 hexadecimal hash.")
-        self.db_block.delete(block_hash)
+        try:
+            self.db_block.delete(block_hash)
+        except RuntimeError as e:
+            raise exceptions.BCHTDatabaseClosedError(
+                "LevelDB backend closed.") from e
 
     def iter_blocks(self) -> typing.Generator[BCHTBlock, None, None]:
         """Return a iterable returning of BCHT Blocks, unordered.
@@ -121,10 +133,19 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         ------
         BCHTBlock
             BCHT Blocks
+
+        Raises
+        ------
+        BCHTDatabaseClosedError
+            If the database was closed
         """
 
-        for raw in self.db_block.iterator(include_key=False):
-            yield BCHTBlock.from_raw(raw)
+        try:
+            for raw in self.db_block.iterator(include_key=False):
+                yield BCHTBlock.from_raw(raw)
+        except RuntimeError as e:
+            raise exceptions.BCHTDatabaseClosedError(
+                "LevelDB backend closed.") from e
 
     def iter_blocks_with_key(self) -> typing.Generator[tuple[bytes, BCHTBlock], None, None]:
         """Return a iterable returning of BCHT Blocks, unordered, with keys.
@@ -133,10 +154,19 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         ------
         tuple[bytes, BCHTBlock]
             hash as keys, BCHT Blocks as values.
+
+        Raises
+        ------
+        BCHTDatabaseClosedError
+            If the database was closed
         """
 
-        for key, value in self.db_block:
-            yield key, BCHTBlock.from_raw(value)
+        try:
+            for key, value in self.db_block:
+                yield key, BCHTBlock.from_raw(value)
+        except RuntimeError as e:
+            raise exceptions.BCHTDatabaseClosedError(
+                "LevelDB backend closed.") from e
 
     def getattr(self, attr_name: bytes) -> bytes:
         """Retrieve an attibute from the database
@@ -153,17 +183,22 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         Raises
         ------
-        KeyError
+        BCHTAttributeNotFoundError
             If that attibute does not exist.
         ValueError
             If the key is not bytes, or if not accepted by the backend.
-        RuntimeError
+        BCHTDatabaseClosedError
             If the database was closed.
         """
 
-        rtn = self.db_attr.get(attr_name)
+        try:
+            rtn = self.db_attr.get(attr_name)
+        except RuntimeError as e:
+            raise exceptions.BCHTDatabaseClosedError(
+                "LevelDB backend closed.") from e
         if rtn is None:
-            raise KeyError(f"{attr_name} not found in the database.")
+            raise exceptions.BCHTAttributeNotFoundError(
+                f"{attr_name} not found in the database.")
         return rtn
 
     def setattr(self, attr_name: bytes, content: bytes):
@@ -180,11 +215,15 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         ------
         ValueError
             If the data or key is not bytes, or if not accepted by the backend.
-        RuntimeError
+        BCHTDatabaseClosedError
             If the database was closed.
         """
 
-        self.db_attr.put(attr_name, content)
+        try:
+            self.db_attr.put(attr_name, content)
+        except RuntimeError as e:
+            raise exceptions.BCHTDatabaseClosedError(
+                "LevelDB backend closed.") from e
 
     def delattr(self, attr_name: bytes):
         """Delete an attibute from the database
@@ -196,15 +235,17 @@ class BCHTLevelDBStorage(BCHTStorageBase):
 
         Raises
         ------
-        KeyError
-            If that attibute does not exist.
         ValueError
             If the key is not bytes, or if not accepted by the backend.
-        RuntimeError
+        BCHTDatabaseClosedError
             If the database was closed.
         """
 
-        self.db_attr.delete(attr_name)
+        try:
+            self.db_attr.delete(attr_name)
+        except RuntimeError as e:
+            raise exceptions.BCHTDatabaseClosedError(
+                "LevelDB backend closed.") from e
 
     def close(self):
         """Closes the LevelDB."""

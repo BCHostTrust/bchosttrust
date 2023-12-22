@@ -11,7 +11,8 @@ __all__ = (
     "internal",
     "storage",
     "attitudes",
-    "utils"
+    "utils",
+    "exceptions"
 )
 
 from importlib import import_module

@@ -6,6 +6,7 @@ WARNING: This is not suitable for command-line tests!
 import typing
 
 from .meta import BCHTStorageBase
+from .. import exceptions
 from .. import BCHTBlock
 
 
@@ -35,18 +36,24 @@ class BCHTDummyStorage(BCHTStorageBase):
 
         Raises
         ------
-        KeyError
+        BCHTBlockNotFoundError
             If the block with the given hash is not found.
-        ValueError
+        BCHTInvalidHashError
             If block_hash is not a valid SHA3-256 hexadecimal hash.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
         if self.closed:
-            raise RuntimeError("Database is closed.")
+            raise exceptions.BCHTDatabaseClosedError("Database is closed.")
         if len(block_hash) != 32:
-            raise ValueError(
+            raise exceptions.BCHTInvalidHashError(
                 f"{block_hash} is not a valid SHA3-512 hexadecimal hash.")
-        return self.db[block_hash]  # raise KeyError if not found
+        try:
+            return self.db[block_hash]  # raise KeyError if not found
+        except KeyError as e:
+            raise exceptions.BCHTBlockNotFoundError(
+                f"Block {block_hash} not found in the database.") from e
 
     def put(self, block_data: BCHTBlock):
         """Put the given block into the database.
@@ -55,10 +62,15 @@ class BCHTDummyStorage(BCHTStorageBase):
         ----------
         block_data : BCHTBlock
             The BCHTBlock object to be stored.
+
+        Raises
+        ------
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
         if self.closed:
-            raise RuntimeError("Database is closed.")
+            raise exceptions.BCHTDatabaseClosedError("Database is closed.")
         block_hash = block_data.hash
         self.db[block_hash] = block_data
 
@@ -72,16 +84,16 @@ class BCHTDummyStorage(BCHTStorageBase):
 
         Raises
         ------
-        KeyError
-            If the block with the given hash is not found.
-        ValueError
+        BCHTInvalidHashError
             If block_hash is not a valid SHA3-256 hexadecimal hash.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
         if self.closed:
-            raise RuntimeError("Database is closed.")
+            raise exceptions.BCHTDatabaseClosedError("Database is closed.")
         if len(block_hash) != 32:
-            raise ValueError(
+            raise exceptions.BCHTInvalidHashError(
                 f"{block_hash} is not a valid SHA3-512 hexadecimal hash.")
         del self.db[block_hash]
 
@@ -92,7 +104,15 @@ class BCHTDummyStorage(BCHTStorageBase):
         ------
         BCHTBlock
             BCHT Blocks
+
+        Raises
+        ------
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
+
+        if self.closed:
+            raise exceptions.BCHTDatabaseClosedError("Database is closed.")
 
         for _, value in self.db.items():
             yield value
@@ -104,7 +124,15 @@ class BCHTDummyStorage(BCHTStorageBase):
         ------
         tuple[bytes, BCHTBlock]
             hash as keys, BCHT Blocks as values.
+
+        Raises
+        ------
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
+
+        if self.closed:
+            raise exceptions.BCHTDatabaseClosedError("Database is closed.")
 
         for key, value in self.db.items():
             yield key, value
@@ -124,15 +152,21 @@ class BCHTDummyStorage(BCHTStorageBase):
 
         Raises
         ------
-        KeyError
+        BCHTAttributeNotFoundError
             If that attibute does not exist.
         ValueError
             If the key is not bytes, or if not accepted by the backend.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
         if self.closed:
-            raise RuntimeError("Database is closed.")
-        return self.attr_db[attr_name]  # raise KeyError if not found
+            raise exceptions.BCHTDatabaseClosedError("Database is closed.")
+        try:
+            return self.attr_db[attr_name]  # raise KeyError if not found
+        except KeyError as e:
+            raise exceptions.BCHTAttributeNotFoundError(
+                f"Attribute {attr_name} not found.") from e
 
     def setattr(self, attr_name: bytes, content: bytes):
         """Set an attibute into the database
@@ -148,10 +182,12 @@ class BCHTDummyStorage(BCHTStorageBase):
         ------
         ValueError
             If the data or key is not bytes, or if not accepted by the backend.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
         if self.closed:
-            raise RuntimeError("Database is closed.")
+            raise exceptions.BCHTDatabaseClosedError("Database is closed.")
         self.attr_db[attr_name] = content
 
     def delattr(self, attr_name: bytes):
@@ -164,14 +200,14 @@ class BCHTDummyStorage(BCHTStorageBase):
 
         Raises
         ------
-        KeyError
-            If that attibute does not exist.
         ValueError
             If the key is not bytes, or if not accepted by the backend.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
         if self.closed:
-            raise RuntimeError("Database is closed.")
+            raise exceptions.BCHTDatabaseClosedError("Database is closed.")
         del self.attr_db[attr_name]
 
     @property

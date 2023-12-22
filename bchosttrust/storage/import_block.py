@@ -3,6 +3,7 @@
 
 from ..internal.block import BCHTBlock
 from ..consensus import validate
+from .. import exceptions
 from . import BCHTStorageBase
 
 
@@ -36,7 +37,7 @@ def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
 
     try:
         curr_hashes = backend.getattr(b"curr_hashes")
-    except KeyError:
+    except exceptions.BCHTAttributeNotFoundError:
         return tuple()
     return tuple(curr_hashes[i:i+32] for i in range(0, len(curr_hashes), 32))
 
@@ -50,16 +51,19 @@ def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
         The storage backend to be used.
     new_hash : bytes
         The hash of the new block to be added.
+
+    Raises
+    ------
+    BCHTInvalidHashError
+        If new_hash is not a valid SHA3-256 hash.
     """
 
-    # 1. Get `curr_hashes` from attribute database (.getattr)
-    #    if KeyError, it should return an empty byte string (b"")
-    # 2. Append new_hash into `curr_hashes`
-    # 3. Set the new curr_hashes into the attribute database
-
+    if len(new_hash) != 32:
+        raise exceptions.BCHTInvalidHashError(
+            f"{new_hash} is not a valid SHA3-512 hexadecimal hash.")
     try:
         curr_hashes = backend.getattr(b"curr_hashes")
-    except KeyError:
+    except exceptions.BCHTAttributeNotFoundError:
         curr_hashes = b""
     curr_hashes += new_hash
     backend.setattr(b"curr_hashes", curr_hashes)
@@ -101,35 +105,26 @@ def import_block(backend: BCHTStorageBase, block: BCHTBlock):
 
     Raises
     ------
-    ValueError
+    BCHTConsensusFailedError
         If the block is invalid
     """
 
-    # 1. Get the previous block from block.prev_hash.
-    # 2. Check the creation time of the previous block.
-    #    If this block is earlier than the later block, of course
-    #    reject it by raising a ValueError.
-    # 2. Check the block against the consensus using the
-    #    bchosttrust.consensus.validate function.
-    #    If the block fails, reject it by raising a ValueError.
-    # 3. Add the hash into the database (backend.put).
-    # 4. Check if the `prev_hash` of the block is the same as
-    #    `prev_hash` in the attribute database.
-    #    - If yes, Append this block's
-    #      hash to `curr_hashes` of the attribute database.
-    # 5. Otherwise, check if the `prev_hash` of the block is one of the
-    #    hashes listed in `curr_hashes`.
-    #    - If yes, replace `prev_hash`
-    #      in the attribute database with this block's `prev_hash`, and replace
-    #      `curr_hashes` in the attribute database with this block's hash.
-
-    prev_block = backend.get(block.prev_hash)
-    if prev_block.creation_time > block.creation_time:
-        raise ValueError("Block is earlier than the previous block")
+    if block.prev_hash != (b"\x00" * 32):
+        try:
+            prev_block = backend.get(block.prev_hash)
+        except exceptions.BCHTBlockNotFoundError as e:
+            raise exceptions.BCHTConsensusFailedError(
+                "Previous block not found") from e
+        if prev_block.creation_time > block.creation_time:
+            raise exceptions.BCHTConsensusFailedError(
+                "Block is earlier than the previous block")
     if not validate(block):
-        raise ValueError("Block validation failed")
+        raise exceptions.BCHTConsensusFailedError("Block validation failed")
     backend.put(block)
-    prev_hash = backend.getattr(b"prev_hash")
+    try:
+        prev_hash = backend.getattr(b"prev_hash")
+    except exceptions.BCHTAttributeNotFoundError:
+        prev_hash = b"\x00" * 32  # Special value for first block
     if block.prev_hash == prev_hash:
         add_hash_to_current(backend, block.hash)
     elif block.prev_hash in parse_curr_hashes(backend):

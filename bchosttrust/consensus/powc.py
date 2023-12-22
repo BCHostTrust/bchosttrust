@@ -4,6 +4,7 @@
 import typing
 
 from ..internal import BCHTBlock, BCHTEntry
+from .. import exceptions
 
 
 # Defines how many zero bytes are required.
@@ -83,12 +84,14 @@ def attempt(  # pylint: disable=too-many-arguments
 
     Raises
     ------
-    ValueError
-        If any BCHTBlock values are found to be invalid.
+    BCHTOutOfRangeError
+        If any fields exceeds the maximum.
+    TypeError
+        If any fields are of the wrong type.
     """
 
     if maximum_tries > BCHTBlock.MAX_NONCE:
-        raise ValueError(
+        raise exceptions.BCHTOutOfRangeError(
             f"maximum_tries must not exceed {BCHTBlock.MAX_NONCE}")
     for nonce in range(0, maximum_tries):
         block = BCHTBlock(version, prev_hash, creation_time, nonce, entries)

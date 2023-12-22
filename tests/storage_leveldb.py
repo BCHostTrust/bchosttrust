@@ -11,6 +11,7 @@ from os import path
 from bchosttrust import BCHTBlock, BCHTEntry
 from bchosttrust.storage import BCHTLevelDBStorage
 from bchosttrust import attitudes
+from bchosttrust import exceptions
 
 
 class BCHTLevelDBStorageTestCase(unittest.TestCase):
@@ -48,7 +49,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
 
         backend.delete(block.hash)
 
-        with self.assertRaises(KeyError):
+        with self.assertRaises(exceptions.BCHTBlockNotFoundError):
             backend.get(block.hash)
 
     def testAttrReadWrite(self):
@@ -75,7 +76,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
 
         backend.delattr(attr_key)
 
-        with self.assertRaises(KeyError):
+        with self.assertRaises(exceptions.BCHTAttributeNotFoundError):
             backend.getattr(attr_key)
 
     def testIteration(self):
@@ -145,13 +146,13 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
 
         self.assertTrue(backend.closed)
 
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(exceptions.BCHTDatabaseClosedError):
             attr_key = b"last_block_id"
             attr_value = b"Catgirl-Nya"
 
             backend.setattr(attr_key, attr_value)
 
-        with self.assertRaises(RuntimeError):
+        with self.assertRaises(exceptions.BCHTDatabaseClosedError):
             entry_a = BCHTEntry("www.google.com", 2)
             entry_b = BCHTEntry("www.example.net", 3)
             entry_tuple = (entry_a, entry_b)

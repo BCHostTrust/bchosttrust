@@ -28,10 +28,12 @@ class BCHTStorageBase(metaclass=ABCMeta):
 
         Raises
         ------
-        KeyError
+        BCHTBlockNotFoundError
             If the block with the given hash is not found.
-        ValueError
+        BCHTInvalidHashError
             If block_hash is not a valid SHA3-256 hexadecimal hash.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
     @abstractmethod
@@ -42,6 +44,11 @@ class BCHTStorageBase(metaclass=ABCMeta):
         ----------
         block_data : BCHTBlock
             The BCHTBlock object to be stored.
+
+        Raises
+        ------
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
     @abstractmethod
@@ -55,10 +62,10 @@ class BCHTStorageBase(metaclass=ABCMeta):
 
         Raises
         ------
-        KeyError
-            If the block with the given hash is not found.
-        ValueError
+        BCHTInvalidHashError
             If block_hash is not a valid SHA3-256 hexadecimal hash.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
     @abstractmethod
@@ -69,6 +76,11 @@ class BCHTStorageBase(metaclass=ABCMeta):
         ------
         BCHTBlock
             BCHT Blocks
+
+        Raises
+        ------
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
     @abstractmethod
@@ -79,6 +91,11 @@ class BCHTStorageBase(metaclass=ABCMeta):
         ------
         tuple[bytes, BCHTBlock]
             hash as keys, BCHT Blocks as values.
+
+        Raises
+        ------
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
     @abstractmethod
@@ -97,10 +114,12 @@ class BCHTStorageBase(metaclass=ABCMeta):
 
         Raises
         ------
-        KeyError
+        BCHTAttributeNotFoundError
             If that attibute does not exist.
         ValueError
             If the key is not bytes, or if not accepted by the backend.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
     @abstractmethod
@@ -118,6 +137,8 @@ class BCHTStorageBase(metaclass=ABCMeta):
         ------
         ValueError
             If the data or key is not bytes, or if not accepted by the backend.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
     @abstractmethod
@@ -131,10 +152,10 @@ class BCHTStorageBase(metaclass=ABCMeta):
 
         Raises
         ------
-        KeyError
-            If that attibute does not exist.
         ValueError
             If the key is not bytes, or if not accepted by the backend.
+        BCHTDatabaseClosedError
+            If the database was closed.
         """
 
     @abstractmethod
