@@ -4,11 +4,14 @@
 from collections import defaultdict
 from typing import Generator
 
+from typeguard import typechecked
+
 from ..storage import BCHTStorageBase
 from ..internal import BCHTBlock
 from .. import attitudes
 
 
+@typechecked
 def iter_from_block(backend: BCHTStorageBase, bhash: bytes) -> Generator[BCHTBlock, None, None]:
     """Go through every block starting from this block.
 
@@ -45,6 +48,7 @@ def iter_from_block(backend: BCHTStorageBase, bhash: bytes) -> Generator[BCHTBlo
         yield block
 
 
+@typechecked
 def get_website_votes(
         backend: BCHTStorageBase,
         bhash: bytes) -> defaultdict[str, defaultdict[int, int]]:
@@ -76,6 +80,7 @@ def get_website_votes(
     return result
 
 
+@typechecked
 def get_website_rating(
         backend: BCHTStorageBase,
         bhash: bytes) -> dict[str, int]:

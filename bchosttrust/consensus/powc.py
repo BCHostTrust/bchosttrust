@@ -3,6 +3,8 @@
 
 import typing
 
+from typeguard import typechecked
+
 from ..internal import BCHTBlock, BCHTEntry
 from .. import exceptions
 
@@ -14,6 +16,7 @@ HASH_TARGET = int.from_bytes(
     (b"\x00" * ZERO_BYTES) + (b"\xFF" * (32 - ZERO_BYTES)))
 
 
+@typechecked
 def validate_hash(bhash: bytes) -> bool:
     """Validates the given hash (in bytes) according to the proof-of-work target
 
@@ -34,6 +37,7 @@ def validate_hash(bhash: bytes) -> bool:
     return int.from_bytes(bhash) <= HASH_TARGET
 
 
+@typechecked
 def validate_block_hash(block: BCHTBlock) -> bool:
     """Validates the given BCHTBlock according to the proof-of-work target
 
@@ -51,11 +55,12 @@ def validate_block_hash(block: BCHTBlock) -> bool:
     return validate_hash(block.hash)
 
 
+@typechecked
 def attempt(  # pylint: disable=too-many-arguments
         version: int,
         prev_hash: bytes,
         creation_time: int,
-        entries: tuple[BCHTEntry],
+        entries: tuple[BCHTEntry, ...],
         maximum_tries: int = BCHTBlock.MAX_NONCE,
         powf: typing.Callable = validate_hash) -> tuple[typing.Union[BCHTBlock, None], int]:
     """Attempt the proof-of-work by accuminating nonces

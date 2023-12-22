@@ -6,10 +6,13 @@ import typing
 from dataclasses import dataclass
 from hashlib import sha3_256
 
+from typeguard import typechecked
+
 from .. import exceptions
 
 
 @dataclass(frozen=True)
+@typechecked
 class BCHTEntry:
     """A BCHT Entry to be embedded into a BCHTBlock.
 
@@ -134,7 +137,7 @@ class BCHTEntry:
                 "Invalid length of raw bytes chain") from e
 
     @classmethod
-    def from_raw_chain(cls, raw_bytes_chain: bytes) -> tuple[typing.Self]:
+    def from_raw_chain(cls, raw_bytes_chain: bytes) -> tuple[typing.Self, ...]:
         """Convert a raw chain of entries into a tuple of objects
 
         Parameters
@@ -144,7 +147,7 @@ class BCHTEntry:
 
         Returns
         -------
-        tuple[typing.Self]
+        tuple[typing.Self, ...]
             The tuple of BCHTEntry objects
 
         Raises
@@ -175,6 +178,7 @@ class BCHTEntry:
 
 
 @dataclass(frozen=True)
+@typechecked
 class BCHTBlock:
     """A BCHT Block in the BCHT Blockchain.
 

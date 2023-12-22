@@ -4,12 +4,14 @@ WARNING: This is not suitable for command-line tests!
          Use LevelDB in a temporary directory instead."""
 
 import typing
+from typeguard import typechecked
 
 from .meta import BCHTStorageBase
 from .. import exceptions
 from .. import BCHTBlock
 
 
+@typechecked
 class BCHTDummyStorage(BCHTStorageBase):
     """BCHT in-RAM storage backend"""
 

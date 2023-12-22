@@ -40,6 +40,12 @@ After that, run the following in a Python console to verify the installation:
 
 Installing BCHostTrust directly user-wide or system-wide is discouraged as it may cause conflicts between versions or system packages.
 
+## API Usage
+
+The API of BCHostTrust is well-documented in their respective [docstrings](https://peps.python.org/pep-0257/). Take a look before writing your code on top of BCHostTrust.
+
+All parameters passed into the functions are forced to follow the [hinted type](https://peps.python.org/pep-0484/), thanks to the usage of [typeguard](https://typeguard.readthedocs.io/en/latest/index.html). You should run your code in debug mode (the default in most cases) to see if your code is violating any of the type hints. After that, you may run your well-tested code in production mode to avoid performance overheads.
+
 ## Contribution
 
 We welcome all kinds of contributions to the BCHostTrust project. You may join in the following ways:

@@ -1,18 +1,16 @@
 # bchosttrust/bchosttrust/storage/import_block.py
 """Handle import of blocks"""
 
+from typeguard import typechecked
+
 from ..internal.block import BCHTBlock
 from ..consensus import validate
 from .. import exceptions
 from . import BCHTStorageBase
 
 
-# Add block into database: backend.put(block)
-# Get block from database: backend.get(hash)
-# Set attribute: backend.setattr(key, value)
-# Get attrioute: backend.getattr(key)
-
-def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
+@typechecked
+def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes, ...]:
     """Parse the list of hashes of current blocks 
     stored in the database into tuple.
 
@@ -42,6 +40,7 @@ def parse_curr_hashes(backend: BCHTStorageBase) -> tuple[bytes]:
     return tuple(curr_hashes[i:i+32] for i in range(0, len(curr_hashes), 32))
 
 
+@typechecked
 def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
     """Appends a new hash into the list of current blocks
 
@@ -69,7 +68,8 @@ def add_hash_to_current(backend: BCHTStorageBase, new_hash: bytes):
     backend.setattr(b"curr_hashes", curr_hashes)
 
 
-def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
+@typechecked
+def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock, ...]:
     """Get a list of current blocks
 
     Parameters
@@ -93,6 +93,7 @@ def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock]:
     return tuple(backend.get(h) for h in hashes)
 
 
+@typechecked
 def import_block(backend: BCHTStorageBase, block: BCHTBlock):
     """Import a block into the BCHT Database
 

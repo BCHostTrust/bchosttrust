@@ -5,6 +5,8 @@ import typing
 from typing import Literal
 from difflib import SequenceMatcher
 
+from typeguard import typechecked
+
 # https://stackoverflow.com/a/17388505
 # License: https://creativecommons.org/licenses/by-sa/3.0/
 
@@ -16,6 +18,7 @@ def _similar(a, b):
 DEFAULT_MIN_RATIO = 0.7
 
 
+@typechecked
 def iter_simular_names(
         from_name: str,
         list_names: typing.Iterable[str],
@@ -44,10 +47,11 @@ def iter_simular_names(
             yield name
 
 
+@typechecked
 def get_simular_names(
         from_name: str,
         list_names: typing.Iterable[str],
-        min_ratio: float = DEFAULT_MIN_RATIO) -> tuple[str]:
+        min_ratio: float = DEFAULT_MIN_RATIO) -> tuple[str, ...]:
     """Get a tuple of simular strings when comparing from_name again list_names.
 
     Parameters
@@ -80,6 +84,7 @@ class ThresholdDict(typing.TypedDict):
     BAD: int
 
 
+@typechecked
 def analyse_domain_name(
         from_name: str,
         ratings: dict[str, int],

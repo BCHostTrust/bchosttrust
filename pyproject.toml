@@ -4,9 +4,18 @@ description = "Blockchain solution to domain name trustworthy"
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
-    "plyvel==1.5.0",
+    "anytree==2.12.1",
+    "astroid==3.0.2",
     "click==8.1.7",
-    "anytree==2.12.1"
+    "dill==0.3.7",
+    "isort==5.13.2",
+    "mccabe==0.7.0",
+    "platformdirs==4.1.0",
+    "plyvel==1.5.0",
+    "six==1.16.0",
+    "tomlkit==0.12.3",
+    "typeguard==4.1.5",
+    "typing_extensions==4.9.0",
 ]
 authors = [
     {name = "Marco Pui", email = "marcopui5507@gmail.com"},

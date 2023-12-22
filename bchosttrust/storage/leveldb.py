@@ -3,12 +3,14 @@
 
 import typing
 from plyvel import DB as LDB
+from typeguard import typechecked
 
 from .meta import BCHTStorageBase
 from .. import exceptions
 from .. import BCHTBlock
 
 
+@typechecked
 class BCHTLevelDBStorage(BCHTStorageBase):
     """BCHT LevelDB Storage backend
 
@@ -58,9 +60,9 @@ class BCHTLevelDBStorage(BCHTStorageBase):
         """
 
         block_hash = block_data.hash
-        block_data = block_data.raw
+        raw_block_data = block_data.raw
         try:
-            self.db_block.put(block_hash, block_data)
+            self.db_block.put(block_hash, raw_block_data)
         except RuntimeError as e:
             raise exceptions.BCHTDatabaseClosedError(
                 "LevelDB backend closed.") from e

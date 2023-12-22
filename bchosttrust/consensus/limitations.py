@@ -3,12 +3,15 @@
 
 from collections import Counter
 
+from typeguard import typechecked
+
 from bchosttrust.internal.block import BCHTBlock
 
 
 MAX_ENTRIES = 10
 
 
+@typechecked
 def validate_block_limitations(block: BCHTBlock) -> bool:
     """validate a BCHT Block according to power-unrelated consensus
 
