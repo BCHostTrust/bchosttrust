@@ -4,7 +4,7 @@ This repository is the reference implementation of BCHostTrust, a distributed da
 
 ## Installation
 
-To use BCHostTrust, at least Python 3.11 is required.
+To use BCHostTrust, Python 3.11 is required.
 
 ### Via pipx (recommended for end users)
 
@@ -44,7 +44,7 @@ Installing BCHostTrust directly user-wide or system-wide is discouraged as it ma
 
 The API of BCHostTrust is well-documented in their respective [docstrings](https://peps.python.org/pep-0257/). Take a look before writing your code on top of BCHostTrust.
 
-All parameters passed into the functions are forced to follow the [hinted type](https://peps.python.org/pep-0484/), thanks to the usage of [typeguard](https://typeguard.readthedocs.io/en/latest/index.html). You should run your code in debug mode (the default in most cases) to see if your code is violating any of the type hints. After that, you may run your well-tested code in production mode to avoid performance overheads.
+All parameters passed into the functions are forced to follow the [hinted type](https://peps.python.org/pep-0484/), thanks to the usage of [typeguard](https://typeguard.readthedocs.io/en/latest/index.html). You should run your code in debug mode (the default in most cases) to see if your code is violating any of the type hints. After that, you may run your well-tested code in optimized mode to avoid performance overheads.
 
 ## Contribution
 
