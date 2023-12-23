@@ -3,9 +3,8 @@
 
 __all__ = ("block", )
 
-from importlib import import_module
+import lazy_loader as lazy
 
 from .block import BCHTBlock, BCHTEntry
 
-for mod in __all__:
-    mod = import_module(f".{mod}", package=__name__)
+__getattr__, __dir__, _ = lazy.attach(__name__, __all__)

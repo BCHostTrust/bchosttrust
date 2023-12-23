@@ -7,7 +7,7 @@ __version__ = "0.0.1"
 __all__ = (
     "utils",
     "analysis",
-    # "cli",
+    "cli",
     "consensus",
     "internal",
     "storage",
@@ -15,9 +15,8 @@ __all__ = (
     "exceptions"
 )
 
-from importlib import import_module
+import lazy_loader as lazy
 
 from .internal import BCHTBlock, BCHTEntry
 
-for mod in __all__:
-    mod = import_module(f".{mod}", package=__name__)
+__getattr__, __dir__, _ = lazy.attach(__name__, __all__)

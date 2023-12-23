@@ -3,14 +3,13 @@
 
 __all__ = ("powc", "limitations")
 
-from importlib import import_module
+import lazy_loader as lazy
 
 from bchosttrust.internal.block import BCHTBlock
 from .powc import validate_block_hash
 from .limitations import validate_block_limitations
 
-for mod in __all__:
-    mod = import_module(f".{mod}", package=__name__)
+__getattr__, __dir__, _ = lazy.attach(__name__, __all__)
 
 
 def validate(block: BCHTBlock) -> bool:

@@ -4,15 +4,14 @@
 __all__ = ("leveldb", "meta", "dummy")
 
 import os
-from importlib import import_module
+import lazy_loader as lazy
 
 from .meta import BCHTStorageBase
 from .leveldb import BCHTLevelDBStorage
 from .dummy import BCHTDummyStorage
 from ..utils import get_data_path
 
-for mod in __all__:
-    mod = import_module(f".{mod}", package=__name__)
+__getattr__, __dir__, _ = lazy.attach(__name__, __all__)
 
 
 def get_default_storage() -> BCHTStorageBase:
