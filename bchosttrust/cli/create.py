@@ -17,7 +17,7 @@ from ..utils import HashParamType
 @click.argument("creation_time", nargs=1, type=int)
 @click.argument("entries", nargs=-1, type=str)
 @click.pass_context
-def cli(  # pylint: disable=too-many-arguments
+def cli(  # pylint: disable=too-many-arguments, too-many-locals
         ctx: click.Context,
         version: int,
         prev_hash: bytes,
