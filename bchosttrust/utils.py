@@ -84,6 +84,8 @@ class HashParamType(click.ParamType):  # pylint: disable=too-few-public-methods
 
     def convert(self, value, param, ctx):  # pylint: disable=unused-argument, missing-function-docstring, inconsistent-return-statements
         if isinstance(value, str):
+            if value.upper() == "GEN":  # Special value for genesis block
+                return b"\x00" * 32
             if value[0:2].lower() == "0x":
                 value = value[2:]
             if len(value) != 64:

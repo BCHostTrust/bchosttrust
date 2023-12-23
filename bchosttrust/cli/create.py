@@ -13,7 +13,7 @@ from ..utils import HashParamType
 
 @click.command("create")
 @click.argument("version", nargs=1, type=int)
-@click.argument("prev_hash", nargs=1, type=HashParamType)
+@click.argument("prev_hash", nargs=1, type=HashParamType())
 @click.argument("creation_time", nargs=1, type=int)
 @click.argument("entries", nargs=-1, type=str)
 @click.pass_context
