@@ -1,13 +1,10 @@
 # bchosttrust/bchosttrust/cli/create.py
 """Create block from file input"""
 
-import typing
-import sys
-
 import click
 from click import echo
 
-from ..internal.block import BCHTBlock, BCHTEntry
+from ..internal.block import BCHTEntry
 from ..storage import BCHTStorageBase, import_block
 from ..consensus.powc import attempt
 from .. import exceptions

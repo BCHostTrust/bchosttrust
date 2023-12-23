@@ -5,13 +5,13 @@
 __version__ = "0.0.1"
 
 __all__ = (
+    "utils",
     "analysis",
-    "cli",
+    # "cli",
     "consensus",
     "internal",
     "storage",
     "attitudes",
-    "utils",
     "exceptions"
 )
 

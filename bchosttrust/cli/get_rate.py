@@ -4,20 +4,34 @@
 import click
 from click import echo
 
+from ..storage import BCHTStorageBase
 from ..analysis import get_last_block_hash, search
 
 
 @click.command("get-rate")
 @click.option("--safe/--no-safe", default=True,
               help="Whether to skip the current blocks (i.e. no blocks behind it)")
-@click.argument('domain_name', type=str)
+@click.argument('hostname', type=str)
 @click.pass_context
-def cli(ctx, safe, domain_name):
+def cli(ctx: click.Context, safe: bool, hostname: str):
     """Get the rating of a domain"""
 
     # Get the rating of the domain name with the search.get_website_rating function.
 
-    storage = ctx.obj["storage"]
+    storage: BCHTStorageBase = ctx.obj["storage"]
 
-    # Remove the following line before start wriiting your code.
-    raise NotImplementedError
+    try:
+        last_block_hash = get_last_block_hash(storage, safe)
+    except RuntimeError:
+        echo("Cannot find last block hash", err=True)
+        ctx.exit(1)
+
+    ratings = search.get_website_rating(storage, last_block_hash)
+
+    if hostname in ratings:
+        echo(ratings[hostname])
+        ctx.exit(0)
+
+    echo("WARNING: rating not found", err=True)
+    echo(0)
+    ctx.exit(2)
