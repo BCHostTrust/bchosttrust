@@ -3,11 +3,13 @@
 
 from typing import Iterable
 from anytree import Node
+from typeguard import typechecked
 
 from ..internal import BCHTBlock
 
 
-def get_child(block_list: Iterable[BCHTBlock], from_block: bytes) -> tuple[BCHTBlock]:
+@typechecked
+def get_child(block_list: Iterable[BCHTBlock], from_block: bytes) -> tuple[BCHTBlock, ...]:
     """Get a list of children of a BCHTBlock.
 
     Parameters
@@ -26,6 +28,7 @@ def get_child(block_list: Iterable[BCHTBlock], from_block: bytes) -> tuple[BCHTB
     return tuple(block for block in block_list if block.prev_hash == from_block)
 
 
+@typechecked
 def generate_tree(block_list: Iterable[BCHTBlock], from_block: bytes) -> Node:
     """Generate a tree of blocks in the BCHT chain.
 

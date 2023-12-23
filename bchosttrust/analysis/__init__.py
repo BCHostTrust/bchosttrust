@@ -3,6 +3,8 @@
 
 from importlib import import_module
 
+from typeguard import typechecked
+
 from ..internal import BCHTBlock
 from ..storage import BCHTStorageBase
 from ..storage.import_block import parse_curr_hashes
@@ -13,6 +15,7 @@ for mod in __all__:
     mod = import_module(f".{mod}", package=__name__)
 
 
+@typechecked
 def get_last_block_hash(backend: BCHTStorageBase, safe: bool = True) -> bytes:
     """Get the hash of the last block.
 
