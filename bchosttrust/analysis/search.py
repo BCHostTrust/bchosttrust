@@ -81,10 +81,42 @@ def get_website_votes(
 
 
 @typechecked
+def get_specific_website_votes(
+        backend: BCHTStorageBase,
+        bhash: bytes,
+        hostname: str) -> defaultdict[int, int]:
+    """Get the number of votes with different attitudes on a specific website
+
+    Parameters
+    ----------
+    backend : BCHTStorageBase
+        The storage backend to be used.
+    bhash : bytes
+        The hash of the starting block. See iter_from_block(...) for more details.
+    hostname : str
+        The hostname to be checked.
+
+    Returns
+    -------
+    defaultdict[int, int]
+        A dictionary with attitudes as keys and votes as values.
+    """
+
+    result: defaultdict[int, int] = defaultdict(int)
+
+    for block in iter_from_block(backend, bhash):
+        for entry in block.entries:
+            if entry.domain_name == hostname:
+                result[entry.attitude] += 1
+
+    return result
+
+
+@typechecked
 def get_website_rating(
         backend: BCHTStorageBase,
         bhash: bytes) -> dict[str, int]:
-    """Get the rating of a hostname by their votes.
+    """Get the rating of hostnames by their votes.
 
     Parameters
     ----------
@@ -104,3 +136,30 @@ def get_website_rating(
         result[name] = sum((attitudes.WEIGHTS[att] * num)
                            for att, num in votes.items())
     return result
+
+
+@typechecked
+def get_specific_website_rating(
+        backend: BCHTStorageBase,
+        bhash: bytes,
+        hostname: str) -> int:
+    """Get the rating of hostnames by their votes.
+
+    Parameters
+    ----------
+    backend : BCHTStorageBase
+        The storage backend to be used.
+    bhash : bytes
+        The hash of the starting block. See iter_from_block(...) for more details.
+    hostname : str
+        The hostname to be checked.
+
+    Returns
+    -------
+    int
+        The rating of the hostname.
+    """
+
+    votes = get_specific_website_votes(backend, bhash, hostname)
+
+    return sum((attitudes.WEIGHTS[att] * num) for att, num in votes.items())

@@ -1,7 +1,7 @@
 # bchosttrust/bchosttrust/cli/get.py
 """Implements the retrieval of block from the database."""
 
-from time import strftime
+from datetime import datetime
 import click
 from click import echo
 
@@ -32,7 +32,8 @@ def cli(ctx, output_format, block_hash):
         echo("Failed to obtain block (unknown error)", err=True)
         raise
 
-    time_str = strftime("%a, %d %b %Y %H:%M:%S +0000", block.creation_time)
+    time_datetime = datetime.utcfromtimestamp(block.creation_time)
+    time_str = time_datetime.strftime('%Y-%m-%d %H:%M:%S UTC')
 
     match output_format:
         case "raw":

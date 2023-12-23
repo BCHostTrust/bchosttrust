@@ -8,7 +8,8 @@ __all__ = (
     "import_block",  # Command: import
     "create",
     "get_rate",
-    "similar_domain"
+    "similar_domain",
+    "tree"
 )
 
 import lazy_loader as lazy

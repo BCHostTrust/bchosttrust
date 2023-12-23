@@ -8,19 +8,17 @@ from ..internal.block import BCHTEntry
 from ..storage import BCHTStorageBase, import_block
 from ..consensus.powc import attempt
 from .. import exceptions
-from ..utils import HashParamType
+from ..storage.import_block import get_curr_blocks
 
 
 @click.command("create")
 @click.argument("version", nargs=1, type=int)
-@click.argument("prev_hash", nargs=1, type=HashParamType())
 @click.argument("creation_time", nargs=1, type=int)
 @click.argument("entries", nargs=-1, type=str)
 @click.pass_context
 def cli(  # pylint: disable=too-many-arguments, too-many-locals
         ctx: click.Context,
         version: int,
-        prev_hash: bytes,
         creation_time: int,
         entries: tuple):
     """Create a BCHT block from data supplied.
@@ -30,6 +28,12 @@ def cli(  # pylint: disable=too-many-arguments, too-many-locals
     prev_hash: The hash of the previous block. For genesis block, use zeros only.
     creation_time: Creation time in Unix epoch.
     entries: Entry in the format of <hostname> <attitude>
+
+    Example:
+    $ bcht create 0 "$(date -u '+%s')" "example.com 0" "example.net 0"
+    Working on 000054870dde74253d34661700fe18adee3646cce0415832c0bc9391595ee176
+    Block found at nonce 120756
+    00007a6c5cbf2e3fd493938ef9b69e2350d2fcefaa448390f1d9fae1c1383cc2
     """
 
     # `input` is a file opened in read mode.
@@ -46,7 +50,7 @@ def cli(  # pylint: disable=too-many-arguments, too-many-locals
     list_entries = []
 
     for i, lines in enumerate(entries):
-        lines = lines.trim()
+        lines = lines.strip()
         if lines == "":
             continue
         if lines[0] == "#":
@@ -71,15 +75,22 @@ def cli(  # pylint: disable=too-many-arguments, too-many-locals
 
         list_entries.append(new_entry)
 
+    curr_hashes = get_curr_blocks(storage)
+    if len(curr_hashes) == 0:
+        echo("Current block not found.", err=True)
+        ctx.exit(3)
+    echo(f"Working on {curr_hashes[0].hexdigest}", err=True)
+
     try:
-        block, _ = attempt(version, prev_hash, creation_time, list_entries)
+        block, nonce = attempt(version, curr_hashes[0].hash,
+                               creation_time, tuple(list_entries))
     except exceptions.BCHTOutOfRangeError as e:
         echo(f"Some value is out of range: {e}", err=True)
-        ctx.exit(3)
+        ctx.exit(4)
 
     if block is None:
         echo("No solution for this block.")
-        ctx.exit(4)
+        ctx.exit(5)
 
     block_hash = block.hash
 
@@ -97,6 +108,7 @@ def cli(  # pylint: disable=too-many-arguments, too-many-locals
         except exceptions.BCHTConsensusFailedError as e:
             echo(
                 f"Import failed: The block failed the consensus: {e}", err=True)
-            ctx.exit(3)
+            ctx.exit(4)
+    echo(f"Block found at nonce {nonce}")
     echo(block.hexdigest)
     ctx.exit(0)
