@@ -94,7 +94,7 @@ def get_curr_blocks(backend: BCHTStorageBase) -> tuple[BCHTBlock, ...]:
 
 
 @typechecked
-def import_block(backend: BCHTStorageBase, block: BCHTBlock):
+def _import_block(backend: BCHTStorageBase, block: BCHTBlock):
     """Import a block into the BCHT Database
 
     Parameters
@@ -110,15 +110,14 @@ def import_block(backend: BCHTStorageBase, block: BCHTBlock):
         If the block is invalid
     """
 
-    if block.prev_hash != (b"\x00" * 32):
-        try:
-            prev_block = backend.get(block.prev_hash)
-        except exceptions.BCHTBlockNotFoundError as e:
-            raise exceptions.BCHTConsensusFailedError(
-                "Previous block not found") from e
-        if prev_block.creation_time > block.creation_time:
-            raise exceptions.BCHTConsensusFailedError(
-                "Block is earlier than the previous block")
+    try:
+        prev_block = backend.get(block.prev_hash)
+    except exceptions.BCHTBlockNotFoundError as e:
+        raise exceptions.BCHTConsensusFailedError(
+            "Previous block not found") from e
+    if prev_block.creation_time > block.creation_time:
+        raise exceptions.BCHTConsensusFailedError(
+            "Block is earlier than the previous block")
     if not validate(block):
         raise exceptions.BCHTConsensusFailedError("Block validation failed")
     backend.put(block)
@@ -131,3 +130,34 @@ def import_block(backend: BCHTStorageBase, block: BCHTBlock):
     elif block.prev_hash in parse_curr_hashes(backend):
         backend.setattr(b"prev_hash", block.prev_hash)
         backend.setattr(b"curr_hashes", block.hash)
+
+
+@typechecked
+def import_block(backend: BCHTStorageBase, block: BCHTBlock):
+    """Import a block into the BCHT Database,
+    taking care of genesis block.
+
+    Parameters
+    ----------
+    backend : BCHTStorageBase
+        The storage backend to be used.
+    block : BCHTBlock
+        The block to be imported.
+
+    Raises
+    ------
+    BCHTConsensusFailedError
+        If the block is invalid
+    """
+
+    block_hash = block.prev_hash
+
+    if block_hash == (b"\x00" * 32):
+        # This is the genesis block, validation would always fail.
+        # Therefore, we are going to construct the attributes ourself.
+
+        backend.put(block)
+        backend.delattr(b"prev_hash")
+        backend.setattr(b"curr_hashes", block.hash)
+    else:
+        _import_block(backend, block)

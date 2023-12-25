@@ -50,20 +50,11 @@ def cli(ctx: click.Context, override: bool, input_file: typing.BinaryIO):
             echo("Use --override to force-import this block.")
             ctx.exit(2)
 
-    if block_hash == (b"\x00" * 32):
-        # This is the genesis block, validation would always fail.
-        # Therefore, we are going to construct the attributes ourself.
-        echo("WARNING: Importing genesis block.", err=True)
-
-        storage.put(block)
-        storage.delattr(b"prev_hash")
-        storage.setattr(b"curr_hashes", block_hash)
-    else:
-        try:
-            import_block.import_block(storage, block)
-        except exceptions.BCHTConsensusFailedError as e:
-            echo(
-                f"Import failed: The block failed the consensus: {e}", err=True)
-            ctx.exit(3)
+    try:
+        import_block.import_block(storage, block)
+    except exceptions.BCHTConsensusFailedError as e:
+        echo(
+            f"Import failed: The block failed the consensus: {e}", err=True)
+        ctx.exit(4)
     echo(block.hexdigest)
     ctx.exit(0)
