@@ -20,8 +20,6 @@
 # The legal text of GPLv3 and LGPLv3 can be found at
 # bchosttrust/gpl-3.0.txt and bchosttrust/lgpl-3.0.txt respectively.
 
-__version__ = "0.0.1"
-
 __all__ = (
     "utils",
     "analysis",
