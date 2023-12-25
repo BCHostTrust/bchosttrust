@@ -6,6 +6,7 @@ import click
 from click import echo
 
 from ..utils import HashParamType
+from ..storage import BCHTStorageBase
 
 
 @click.command("get")
@@ -14,10 +15,10 @@ from ..utils import HashParamType
               default="user")
 @click.argument('block_hash', type=HashParamType())
 @click.pass_context
-def cli(ctx, output_format, block_hash):
+def cli(ctx: click.Context, output_format: str, block_hash: bytes):
     """Get a block by its SHA3-256 hash."""
 
-    storage = ctx.obj["storage"]
+    storage: BCHTStorageBase = ctx.obj["storage"]
 
     try:
         block = storage.get(block_hash)

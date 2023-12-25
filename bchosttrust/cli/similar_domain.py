@@ -6,6 +6,7 @@ import click
 from click import echo
 
 from ..analysis import get_last_block_hash, search, horizontal
+from ..storage import BCHTStorageBase
 
 
 @click.command("similar-domain")
@@ -28,16 +29,16 @@ from ..analysis import get_last_block_hash, search, horizontal
               default="user")
 @click.argument('domain_name', type=str)
 @click.pass_context
-def cli(ctx,  # pylint: disable=too-many-arguments
-        threshold_similar,
-        threshold_sus,
-        threshold_bad,
-        safe,
-        output_format,
-        domain_name):
+def cli(ctx: click.Context,  # pylint: disable=too-many-arguments
+        threshold_similar: int,
+        threshold_sus: int,
+        threshold_bad: int,
+        safe: bool,
+        output_format: str,
+        domain_name: str):
     """Get similiar domains"""
 
-    storage = ctx.obj["storage"]
+    storage: BCHTStorageBase = ctx.obj["storage"]
     last_block_hash = get_last_block_hash(storage, safe)
 
     website_ratings = search.get_website_rating(storage, last_block_hash)
