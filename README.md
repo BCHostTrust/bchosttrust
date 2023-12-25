@@ -1,7 +1,6 @@
 # BCHostTrust - Reference Implementation
 
-This repository is the reference implementation of BCHostTrust, a distributed database of domain name trustworthiness. It uses the concept of [blockchain](https://en.wikipedia.org/wiki/Blockchain), a growing list of records linked together via [cryptographic hashes](https://en.wikipedia.org/wiki/Cryptographic_hash_function), in which [SHA3](https://en.wikipedia.org/wiki/SHA-3)-256 is used in BCHostTrust.
-
+This repository is the reference implementation of BCHostTrust, a distributed database of domain name trustworthiness. It uses the concept of [blockchain](https://en.wikipedia.org/wiki/Blockchain), a growing list of records linked together via [cryptographic hashes](https://en.wikipedia.org/wiki/Cryptographic_hash_function), in which [SHA3](https://en.wikipedia.org/wiki/SHA-3)-256 is used in BCHostTrust. More detailed information can be found at [documents/tech_paper/README.md](https://github.com/BCHostTrust/documents/blob/master/tech_paper/README.md).
 ## Installation
 
 To use BCHostTrust, Python 3.11 is required.
