@@ -2,7 +2,7 @@
 name = "bchosttrust"
 description = "Blockchain solution to domain name trustworthy"
 readme = "README.md"
-version = "0.0.3"
+version = "0.0.3-1"
 dependencies = [
     "anytree==2.12.1",
     "click==8.1.7",
