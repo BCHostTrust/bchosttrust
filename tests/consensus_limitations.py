@@ -14,7 +14,7 @@ class BCHTConsensusTestCase(unittest.TestCase):
     def test_success(self):
         block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
 
         self.assertTrue(limitations.validate_block_limitations(block1))
@@ -34,7 +34,7 @@ class BCHTConsensusTestCase(unittest.TestCase):
     def test_failed_duplicate(self):
         block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.com", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.com", attitudes.UPVOTE)
         ))
 
         self.assertFalse(limitations.validate_block_limitations(block1))

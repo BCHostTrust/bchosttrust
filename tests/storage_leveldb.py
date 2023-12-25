@@ -86,7 +86,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
 
         block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
         block2 = BCHTBlock(1, block1.hash, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
@@ -94,7 +94,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
         ))
         block3 = BCHTBlock(1, block2.hash, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
 
         backend.put(block1)
@@ -113,7 +113,7 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
 
         block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
         block2 = BCHTBlock(1, block1.hash, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
@@ -121,15 +121,14 @@ class BCHTLevelDBStorageTestCase(unittest.TestCase):
         ))
         block3 = BCHTBlock(1, block2.hash, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
 
         backend.put(block1)
         backend.put(block2)
         backend.put(block3)
 
-        dict_blocks = {key: value for key,
-                       value in backend.iter_blocks_with_key()}
+        dict_blocks = dict(backend.iter_blocks_with_key())
 
         for block in (block1, block2, block3):
             self.assertTrue(block.hash in dict_blocks)

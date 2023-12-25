@@ -18,15 +18,13 @@ class BCHTSearchTestCase(unittest.TestCase):
         # Not caring about satisfying PoW here
         self.block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
         self.block2 = BCHTBlock(1, self.block1.hash, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
         self.block3 = BCHTBlock(1, self.block2.hash, 0, 4, (
-            BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.org", attitudes.UPVOTE),
         ))
 
         self.db.put(self.block1)
@@ -49,21 +47,30 @@ class BCHTSearchTestCase(unittest.TestCase):
 
         self.assertDictEqual(votes, {
             "www.example.com": {
-                attitudes.UPVOTE: 3
+                attitudes.UPVOTE: 2
             },
             "www.example.net": {
-                attitudes.UPVOTE: 1,
-                attitudes.DOWNVOTE: 2
-            }
+                attitudes.UPVOTE: 1
+            },
+            "www.example.org": {
+                attitudes.UPVOTE: 1
+            },
         })
 
     def testRating(self):
         ratings = search.get_website_rating(self.db, self.block3.hash)
 
         self.assertDictEqual(ratings, {
-            "www.example.com": 3,
-            "www.example.net": -1  # (-1) + 1 + (-1)
+            "www.example.com": 2,
+            "www.example.net": 1,
+            "www.example.org": 1
         })
+
+    def testSpecificRating(self):
+        specific_rating = search.get_specific_website_rating(
+            self.db, self.block3.hash, "www.example.com")
+
+        self.assertEqual(specific_rating, 2)
 
 
 if __name__ == '__main__':

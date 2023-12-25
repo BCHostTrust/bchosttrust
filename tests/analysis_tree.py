@@ -18,7 +18,7 @@ class BCHTTreeTestCase(unittest.TestCase):
         # Not caring about satisfying PoW here
         self.block1 = BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
         self.block2 = BCHTBlock(1, self.block1.hash, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
@@ -26,7 +26,7 @@ class BCHTTreeTestCase(unittest.TestCase):
         ))
         self.block3 = BCHTBlock(1, self.block2.hash, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
 
         self.db.put(self.block1)

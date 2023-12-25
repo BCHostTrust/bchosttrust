@@ -21,15 +21,15 @@ class BCHTImportBlockTestCase(unittest.TestCase):
         self.blocks = []
         self.blocks.append(BCHTBlock(1, b"\x00" * 32, 0, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         )))
         self.blocks.append(BCHTBlock(1, self.blocks[0].hash, 1, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         )))
         self.blocks.append(BCHTBlock(1, self.blocks[0].hash, 2, 4, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         )))
 
         for block in self.blocks:
@@ -70,7 +70,7 @@ class BCHTImportBlockTestCase(unittest.TestCase):
         # We build a block on top of blocks[1]
         new_block, _ = attempt(1, self.blocks[1].hash, 5, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
 
         # By definition of attempt, we are now getting a block
@@ -97,7 +97,7 @@ class BCHTImportBlockTestCase(unittest.TestCase):
 
         new_block, _ = attempt(1, self.blocks[0].hash, 5, (
             BCHTEntry("www.example.com", attitudes.UPVOTE),
-            BCHTEntry("www.example.net", attitudes.DOWNVOTE)
+            BCHTEntry("www.example.net", attitudes.UPVOTE)
         ))
 
         # By definition of attempt, we are now getting a block

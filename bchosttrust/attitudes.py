@@ -4,8 +4,6 @@
 from collections import defaultdict
 
 UPVOTE = 0
-DOWNVOTE = 1
 
 WEIGHTS = defaultdict(lambda: 0)
 WEIGHTS[UPVOTE] = 1
-WEIGHTS[DOWNVOTE] = -1
