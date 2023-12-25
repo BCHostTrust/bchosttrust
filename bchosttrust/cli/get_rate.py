@@ -18,4 +18,13 @@ def cli(ctx: click.Context, safe: bool, hostname: str):
 
     storage: BCHTStorageBase = ctx.obj["storage"]
 
-    # use search.get_specific_website_rating
+    last_block_hash = None
+    try:
+        last_block_hash = get_last_block_hash(storage, safe=safe)
+    except RuntimeError as e:
+        echo(f"Error getting last block hash: {e}", err=True)
+        ctx.exit(1)
+
+    rating = search.get_specific_website_rating(
+        storage, hostname, last_block_hash)
+    echo(rating)
