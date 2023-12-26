@@ -19,13 +19,13 @@
 # The legal text of GPLv3 and LGPLv3 can be found at
 # bchosttrust/gpl-3.0.txt and bchosttrust/lgpl-3.0.txt respectively.
 
-__all__ = ("powc", "limitations")
-
 import lazy_loader as lazy
 
 from bchosttrust.internal.block import BCHTBlock
 from .powc import validate_block_hash
 from .limitations import validate_block_limitations
+
+__all__ = ("powc", "limitations")
 
 __getattr__, __dir__, _ = lazy.attach(__name__, __all__)
 

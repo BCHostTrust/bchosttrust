@@ -19,8 +19,6 @@
 # The legal text of GPLv3 and LGPLv3 can be found at
 # bchosttrust/gpl-3.0.txt and bchosttrust/lgpl-3.0.txt respectively.
 
-__all__ = ("leveldb", "meta", "dummy")
-
 import os
 import lazy_loader as lazy
 
@@ -28,6 +26,8 @@ from .meta import BCHTStorageBase
 from .leveldb import BCHTLevelDBStorage
 from .dummy import BCHTDummyStorage
 from ..utils import get_data_path
+
+__all__ = ("leveldb", "meta", "dummy")
 
 __getattr__, __dir__, _ = lazy.attach(__name__, __all__)
 

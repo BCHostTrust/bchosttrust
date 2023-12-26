@@ -20,6 +20,10 @@
 # The legal text of GPLv3 and LGPLv3 can be found at
 # bchosttrust/gpl-3.0.txt and bchosttrust/lgpl-3.0.txt respectively.
 
+import lazy_loader as lazy
+
+from .internal import BCHTBlock, BCHTEntry
+
 __version__ = "0.0.3"
 
 __all__ = (
@@ -32,9 +36,5 @@ __all__ = (
     "attitudes",
     "exceptions"
 )
-
-import lazy_loader as lazy
-
-from .internal import BCHTBlock, BCHTEntry
 
 __getattr__, __dir__, _ = lazy.attach(__name__, __all__)
