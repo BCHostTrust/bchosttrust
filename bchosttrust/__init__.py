@@ -24,7 +24,7 @@ import lazy_loader as lazy
 
 from .internal import BCHTBlock, BCHTEntry
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 __all__ = (
     "utils",
