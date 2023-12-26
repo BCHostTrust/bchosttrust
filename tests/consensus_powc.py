@@ -19,7 +19,10 @@
 # The legal text of GPLv3 and LGPLv3 can be found at
 # bchosttrust/gpl-3.0.txt and bchosttrust/lgpl-3.0.txt respectively.
 
-# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=invalid-name
 
 import unittest
 from bchosttrust.consensus import powc

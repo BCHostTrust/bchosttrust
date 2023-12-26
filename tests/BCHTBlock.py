@@ -20,7 +20,11 @@
 # The legal text of GPLv3 and LGPLv3 can be found at
 # bchosttrust/gpl-3.0.txt and bchosttrust/lgpl-3.0.txt respectively.
 
-# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=invalid-name
+# pylint: disable=line-too-long
 
 import unittest
 
@@ -47,6 +51,60 @@ class BCHTBlockTestCase(unittest.TestCase):
         compare_target_block = BCHTBlock(0, b"\x00" * 32, 1, 4, entry_tuple)
 
         self.assertEqual(block, compare_target_block)
+
+    def testToDict(self):
+        entry_a = BCHTEntry("www.google.com", 2)
+        entry_b = BCHTEntry("www.example.net", 3)
+        entry_tuple = (entry_a, entry_b)
+        block_obj = BCHTBlock(0, b"\x00" * 32, 1, 4, entry_tuple)
+        block_dict = block_obj.dict()
+
+        self.assertDictEqual(block_dict, {
+            "version": 0,
+            "prev_hash": b"\x00" * 32,
+            "creation_time": 1,
+            "nonce": 4,
+            "entries": (
+                {
+                    "domain_name": "www.google.com",
+                    "attitude": 2
+                },
+                {
+                    "domain_name": "www.example.net",
+                    "attitude": 3
+                },
+            )
+        })
+
+    def testFromDict(self):
+        block_dict = {
+            "version": 0,
+            "prev_hash": b"\x00" * 32,
+            "creation_time": 1,
+            "nonce": 4,
+            "entries": (
+                {
+                    "domain_name": "www.google.com",
+                    "attitude": 2
+                },
+                {
+                    "domain_name": "www.example.net",
+                    "attitude": 3
+                },
+            )
+        }
+        block_obj = BCHTBlock.from_dict(block_dict)
+
+        self.assertEqual(block_obj.version, 0)
+        self.assertEqual(block_obj.prev_hash, b"\x00" * 32)
+        self.assertEqual(block_obj.creation_time, 1)
+        self.assertEqual(block_obj.nonce, 4)
+
+        entry_a = BCHTEntry("www.google.com", 2)
+        entry_b = BCHTEntry("www.example.net", 3)
+        entry_tuple = (entry_a, entry_b)
+
+        self.assertEqual(block_obj.entries, entry_tuple)
 
 
 if __name__ == '__main__':

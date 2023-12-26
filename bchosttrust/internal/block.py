@@ -29,6 +29,26 @@ from typeguard import typechecked
 from .. import exceptions
 
 
+# Typed Dictionaries
+class BCHTEntryDict(typing.TypedDict):
+    """Dictionary form of BCHTEntry"""
+
+    domain_name: str
+    attitude: int
+
+
+class BCHTBlockDict(typing.TypedDict):
+    """Dictionary form of BCHTBlock"""
+
+    version: int
+    prev_hash: bytes
+    creation_time: int
+    nonce: int
+    entries: tuple[BCHTEntryDict, ...]
+
+# Object Classes
+
+
 @dataclass(frozen=True)
 @typechecked
 class BCHTEntry:
@@ -194,6 +214,36 @@ class BCHTEntry:
 
         return attitude_bytes + domain_name_len_bytes + domain_name_bytes
 
+    def dict(self) -> BCHTEntryDict:
+        """Return the dictionary form of BCHTEntry
+
+        Returns
+        -------
+        BCHTEntryDict
+            The dictionary form
+        """
+
+        return self.__dict__
+
+    @classmethod
+    def from_dict(cls, data_dict: BCHTEntryDict) -> typing.Self:
+        """Convert the dictionary form of BCHTEntry into object
+
+        Parameters
+        ----------
+        data_dict : BCHTEntryDict
+            The dictionary form
+
+        Returns
+        -------
+        BCHTEntry
+            The object form
+        """
+        return cls(
+            domain_name=data_dict["domain_name"],
+            attitude=data_dict["attitude"]
+        )
+
 
 @dataclass(frozen=True)
 @typechecked
@@ -210,7 +260,7 @@ class BCHTBlock:
         The creation time in Unix epoch. Must not exceed 18446744073709551615
     nonce : int
         Increases on every attempt to the proof-of-work concensus. Must not exceed 4294967295
-    entries : tuple[BCHTEntry]
+    entries : tuple[BCHTEntry, ...]
         A tuple of BCHTEntry objects.
     MAX_VERSION : int
         Maximum value accepted for the version field.
@@ -238,7 +288,7 @@ class BCHTBlock:
     prev_hash: bytes  # 32 bytes
     creation_time: int  # u64, 8 bytes
     nonce: int  # u32, 4 bytes
-    entries: tuple[BCHTEntry]
+    entries: tuple[BCHTEntry, ...]
 
     def __post_init__(self):
         if self.version > self.MAX_VERSION:
@@ -341,3 +391,44 @@ class BCHTBlock:
         h = sha3_256()
         h.update(self.raw)
         return h.hexdigest()
+
+    def dict(self) -> BCHTBlockDict:
+        """Return the dictionary form of BCHTBlock.
+
+        Returns
+        -------
+        BCHTBlockDict
+            The dictionary form.
+        """
+
+        return {
+            "version": self.version,
+            "prev_hash": self.prev_hash,
+            "creation_time": self.creation_time,
+            "nonce": self.nonce,
+            "entries": tuple(entry.dict() for entry in self.entries)
+        }
+
+    @classmethod
+    def from_dict(cls, data_dict: BCHTBlockDict) -> typing.Self:
+        """Convert the dictionary form of BCHTBlock into object
+
+        Parameters
+        ----------
+        data_dict : BCHTBlockDict
+            The dictionary form
+
+        Returns
+        -------
+        BCHTBlock
+            The object form
+        """
+
+        return cls(
+            version=data_dict["version"],
+            prev_hash=data_dict["prev_hash"],
+            creation_time=data_dict["creation_time"],
+            nonce=data_dict["nonce"],
+            entries=tuple(BCHTEntry.from_dict(entry)
+                          for entry in data_dict["entries"])
+        )

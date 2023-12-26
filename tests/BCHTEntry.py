@@ -20,7 +20,10 @@
 # The legal text of GPLv3 and LGPLv3 can be found at
 # bchosttrust/gpl-3.0.txt and bchosttrust/lgpl-3.0.txt respectively.
 
-# pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=invalid-name
 
 import unittest
 from bchosttrust import BCHTEntry
@@ -62,6 +65,27 @@ class BCHTEntryTestCase(unittest.TestCase):
         raw = b'\x01\x02'
         with self.assertRaises(ValueError):
             BCHTEntry.from_raw(raw)
+
+    def testToDict(self):
+        domain_name = "www.example.com"
+        attitude = 1
+        entry_obj = BCHTEntry(domain_name, attitude)
+        entry_dict = entry_obj.dict()
+
+        self.assertEqual(entry_dict["domain_name"], domain_name)
+        self.assertEqual(entry_dict["attitude"], attitude)
+
+    def testFromDict(self):
+        domain_name = "www.example.com"
+        attitude = 1
+        entry_dict = {
+            "domain_name": domain_name,
+            "attitude": attitude
+        }
+        entry_obj = BCHTEntry.from_dict(entry_dict)
+
+        self.assertEqual(entry_obj.domain_name, domain_name)
+        self.assertEqual(entry_obj.attitude, attitude)
 
 
 if __name__ == '__main__':
