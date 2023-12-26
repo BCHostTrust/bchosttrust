@@ -73,9 +73,6 @@ git clone ssh://git@github.com/[your username]/bchosttrust
 
 # Using GitHub CLI
 gh repo clone [your username]/bchosttrust
-
-# Using HTTPS (discouraged)
-git clone https://github.com/[your username]/bchosttrust
 ```
 
 After that, create an virtual environment and install BCHostTrust in [development mode](https://setuptools.pypa.io/en/latest/userguide/development_mode.html):
