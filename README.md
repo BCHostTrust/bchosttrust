@@ -90,3 +90,14 @@ pip install --editable .
 ```
 
 Done! Now you can work on BCHostTrust. Don't forget to push your changes to your fork and file a pull request.
+
+## Roadmap
+
+- [x] Prototype
+  - [x] Blockchain Core
+  - [x] Basic Proof-of-work Mechanism
+  - [x] Chain Search and Analysis
+  - [x] Command-line client
+- [ ] Configuration file for command-line
+- [ ] Block exchange protocol
+- [ ] Browser integration (probably in dedicated repository)
