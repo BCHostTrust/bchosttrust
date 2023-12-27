@@ -20,6 +20,7 @@
 # bchosttrust/gpl-3.0.txt and bchosttrust/lgpl-3.0.txt respectively.
 
 from datetime import datetime
+import json
 import click
 from click import echo
 
@@ -29,7 +30,7 @@ from ..storage import BCHTStorageBase
 
 @click.command("get")
 @click.option('-f', '--format', 'output_format',
-              type=click.Choice(("raw", "user"), case_sensitive=False),
+              type=click.Choice(("raw", "user", "json"), case_sensitive=False),
               default="user")
 @click.argument('block_hash', type=HashParamType())
 @click.pass_context
@@ -66,3 +67,7 @@ def cli(ctx: click.Context, output_format: str, block_hash: bytes):
             for entry in block.entries:
                 echo(f" Domain name: {entry.domain_name}")
                 echo(f" Attitude: {entry.attitude}")
+        case "json":
+            block_dict = block.dict()
+            block_dict["prev_hash"] = block_dict["prev_hash"].hex()
+            echo(json.dumps(block_dict))
